@@ -61,9 +61,12 @@ function LoginContent() {
         <div className="absolute inset-0 bg-gradient-to-t from-black from-10% to-transparent to-30% sm:from-5% sm:to-40% " />
       </div>
       <div className="w-full max-w-sm space-y-4 z-10">
-        <h1 className="text-2xl font-bold text-center">
-          Sign in with {loginType === "email" ? "Email" : "Phone"}
-        </h1>
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold leading-9">
+            Sign in with {loginType === "email" ? "Email" : "Phone"}
+          </h1>
+          <p className="leading-9">Earn points for each quest - be quick!</p>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2 [&_input]:bg-background">
             {loginType === "email" ? (

@@ -26,19 +26,19 @@ export function BackgroundImage() {
           unoptimized
           onLoad={() => setIsLoaded(true)}
         />
-      </motion.div>
 
-      {/* Overlay Image */}
-      <div className="absolute inset-0">
-        <Image
-          src={Gfx}
-          alt="Overlay Graphic"
-          fill
-          className="object-cover"
-          unoptimized
-          onLoad={() => setIsLoaded(true)}
-        />
-      </div>
+        {/* Overlay Image */}
+        <div className="absolute inset-0">
+          <Image
+            src={Gfx}
+            alt="Overlay Graphic"
+            fill
+            className="object-cover"
+            unoptimized
+            onLoad={() => setIsLoaded(true)}
+          />
+        </div>
+      </motion.div>
     </div>
   );
 }
