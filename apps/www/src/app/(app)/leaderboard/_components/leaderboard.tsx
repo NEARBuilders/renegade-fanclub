@@ -90,7 +90,7 @@ export function Leaderboard() {
                             src={ranking.avatar ?? undefined}
                             alt={ranking.username}
                           />
-                          <AvatarFallback className="bg-[#2C183E] text-sm">
+                          <AvatarFallback className="bg-[#1c1c1c] text-sm">
                             {ranking.username[0].toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
@@ -103,7 +103,7 @@ export function Leaderboard() {
                         </div>
                       </div>
                       <div
-                        className={`flex flex-col items-center justify-center m-0 w-full  ${ranking.rank === 1 ? "pt-14 rounded-[2.5rem] rounded-b-none h-40 md:h-48 bg-[#5a4e66]" : "w-full h-20"} `}
+                        className={`flex flex-col items-center justify-center m-0 w-full  ${ranking.rank === 1 ? "pt-14 rounded-b-none h-40 md:h-48 bg-gradient-to-b from-[#1c1c1c] to-black rounded-lg border border-[#717171]" : "w-full h-20"} `}
                       >
                         <p
                           className={`font-medium ${ranking.rank === 1 ? "text-base md:text-lg" : "text-sm md:text-base"}`}
@@ -111,7 +111,7 @@ export function Leaderboard() {
                           {ranking.username}
                         </p>
                         <span
-                          className={`font-bold ${rankColorsText[ranking.rank as 1 | 2 | 3]} text-lg md:text-xl`}
+                          className={`font-jersey font-normal leading-relaxed  text-[26px] ${rankColorsText[ranking.rank as 1 | 2 | 3]}`}
                         >
                           {ranking.totalPoints}
                         </span>
