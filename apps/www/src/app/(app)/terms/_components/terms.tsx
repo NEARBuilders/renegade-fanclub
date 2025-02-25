@@ -1,8 +1,8 @@
 export default function Terms() {
   return (
-    <div className="grid p-6 text-white text-xs font-medium font-inter leading-relaxed">
-      <div className="max-w-md">
-        <h2 className="text-base font-semibold">
+    <div className="flex items-center justify-center p-6 text-white text-xs font-medium font-inter leading-relaxed md:text-sm">
+      <div className="max-w-xl">
+        <h2 className="text-base font-semibold md:text-lg">
           Renegade & Sweatcoin Fan Giveaway - Terms & Conditions
         </h2>
 
