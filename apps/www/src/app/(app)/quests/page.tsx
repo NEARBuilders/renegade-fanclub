@@ -37,17 +37,6 @@ export const metadata: Metadata = {
 
 export default async function QuestsPage() {
   const quests = await listQuests();
-  const gameId = 1;
-  const initialGame = await getGame(1);
-
-  // Find prediction quest for the game
-  const predictionQuest = quests.find((q) => {
-    if (q.verificationType !== "prediction") return false;
-    const verificationData = q.verificationData as {
-      game_id?: number;
-    };
-    return verificationData?.game_id === gameId;
-  });
   const [profile, completedQuests] = await Promise.all([
     getUserProfile(),
     getUserQuests(),

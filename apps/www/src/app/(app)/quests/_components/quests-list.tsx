@@ -16,7 +16,7 @@ export function QuestsList({ quests, completedQuests }: QuestsListProps) {
   const queryClient = useQueryClient();
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+    <div className="grid grid-cols-1">
       {quests.map((quest) => {
         const isCompleted = completedQuests.some(
           (completed) => completed.questId === quest.id,

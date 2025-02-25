@@ -35,7 +35,6 @@ export function BackgroundImage() {
             fill
             className="object-cover"
             unoptimized
-            onLoad={() => setIsLoaded(true)}
           />
         </div>
       </motion.div>
