@@ -13,7 +13,7 @@ export function BackgroundImageMain({ overlay = true }: BackgroundImageProps) {
   return (
     <div className="relative w-full h-full">
       <Image
-        src={"/images/bg-2.png"}
+        src="/images/bg-2.png"
         alt="Stadium at Night Background"
         fill
         priority

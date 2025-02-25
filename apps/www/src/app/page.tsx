@@ -4,7 +4,6 @@ import { Login } from "./(auth)/_components/login";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { BackgroundImage } from "./(auth)/_components/background-image";
-import Logo from "../../public/images/logo_white.png";
 
 export const metadata: Metadata = {
   title: "Home | RNG Fan Club",
@@ -53,7 +52,7 @@ export default function HomePage() {
         <div className="flex h-screen overflow-hidden flex-col items-center px-4 py-16 z-20">
           <div className="w-80 h-28">
             <Image
-              src={Logo}
+              src="/images/logo_white.png"
               alt="Renegade Fan Club"
               width={320}
               height={320}
