@@ -36,24 +36,21 @@ export function Header({
   };
 
   return (
-    <header className="sticky top-4 left-0 right-0 z-50 bg-transparent backdrop-blur-xl pb-4">
-      <div className="flex h-16 items-center px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-4 left-0 right-0 z-50 bg-transparent pb-4">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left Section */}
         <div className="flex items-center justify-center min-w-[64px]">
           {showBackButton ? (
             <button
               onClick={() => router.back()}
-              className="flex items-center justify-center h-10 w-10 rounded-xl bg-white/5 hover:bg-white/10 active:scale-95 transition-all duration-200"
+              className="flex items-center justify-center h-10 w-10 rounded-xl bg-none hover:bg-white/10 active:scale-95 transition-all duration-200"
             >
-              <FontAwesomeIcon
-                icon={faArrowLeft}
-                className="h-5 w-5 text-white/90"
-              />
+              <FontAwesomeIcon icon={faArrowLeft} className="h-5 w-5 text-" />
             </button>
           ) : profile ? (
             <Avatar
               onClick={() => router.push("/profile")}
-              className="h-10 w-10 border-2 border-white/10 cursor-pointer"
+              className="h-14 w-14 border-2 border-secondary cursor-pointer"
             >
               <AvatarImage
                 src={profile.avatar ?? undefined}
@@ -69,14 +66,14 @@ export function Header({
         </div>
 
         {/* Center Section */}
-        <div className="flex flex-1 items-center justify-center">
+        <div className="absolute left-1/2 transform -translate-x-1/2">
           {showtitle ? (
             <h1 className="text-lg font-semibold tracking-tight sm:text-xl">
               {formatTitle(pathname)}
             </h1>
           ) : (
             <Image
-              src="/images/rngfanclub-logo-white.png"
+              src="/images/logo_white.png"
               alt="RNG Fan Club"
               width={100}
               height={64}
@@ -91,12 +88,13 @@ export function Header({
           {rightChildren ? (
             <div className="flex items-center space-x-2">{rightChildren}</div>
           ) : totalPoints !== undefined ? (
-            <div className="flex items-center space-x-2 bg-white/10 px-3 py-1.5 rounded-full">
-              <FontAwesomeIcon
-                icon={faTrophy}
-                className="h-4 w-4 text-yellow-500"
-              />
-              <span className="text-sm font-medium" data-testid="user-points">
+            <div className="flex items-center space-x-2 bg-white/10 px-5 py-1.5 rounded-full">
+              <FontAwesomeIcon icon={faTrophy} className="h-5 w-5 text-white" />
+              <span
+                className="text-white text-lg font-normal leading-relaxed font-jersey
+                overflow-hidden whitespace-nowrap text-ellipsis relative max-w-[100px] "
+                data-testid="user-points"
+              >
                 {totalPoints}
               </span>
             </div>

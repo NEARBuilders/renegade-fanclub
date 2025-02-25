@@ -8,6 +8,7 @@ import { getUserQuests, listQuests } from "@/lib/api/quests";
 import { QuestsList } from "./_components/quests-list";
 import { Metadata } from "next";
 import { Game } from "../games/[id]/_components/game";
+import { Title } from "@/components/ui/title";
 
 export const metadata: Metadata = {
   title: "Quests | RNG Fan Club",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
       "Complete exciting quests and challenges to earn points and win Super Bowl tickets. Track your progress and unlock achievements!",
     images: [
       {
-        url: "/images/rngfanclub-logo-white.png",
+        url: "/images/logo_white.png",
         width: 1200,
         height: 630,
         alt: "RNG Fan Club Logo",
@@ -30,23 +31,12 @@ export const metadata: Metadata = {
     title: "Quests | RNG Fan Club",
     description:
       "Complete exciting quests and challenges to earn points and win Super Bowl tickets. Track your progress and unlock achievements!",
-    images: ["/images/rngfanclub-logo-white.png"],
+    images: ["/images/logo_white.png"],
   },
 };
 
 export default async function QuestsPage() {
   const quests = await listQuests();
-  const gameId = 1;
-  const initialGame = await getGame(1);
-
-  // Find prediction quest for the game
-  const predictionQuest = quests.find((q) => {
-    if (q.verificationType !== "prediction") return false;
-    const verificationData = q.verificationData as {
-      game_id?: number;
-    };
-    return verificationData?.game_id === gameId;
-  });
   const [profile, completedQuests] = await Promise.all([
     getUserProfile(),
     getUserQuests(),
@@ -56,11 +46,9 @@ export default async function QuestsPage() {
     <>
       <Header profile={profile} />
       <Container>
-        {/*game predictions*/}
-        <Game
-          gameId={gameId}
-          initialGame={initialGame}
-          predictionQuest={predictionQuest || undefined}
+        <Title
+          title="FINISH OUR QUESTS TO WIN!"
+          description="Earn points for each quest - be quick!"
         />
         {/* Quests List */}
         <QuestsList quests={quests} completedQuests={completedQuests} />

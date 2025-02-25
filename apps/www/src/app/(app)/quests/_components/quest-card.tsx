@@ -100,30 +100,29 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
   }, [handleQuestComplete, verificationData.intent_url]);
 
   return (
-    <Card className="w-full overflow-hidden px-5 pt-6 pb-4 md:px-5 md:pb-2 md:pt-6 flex flex-col justify-between">
-      <div className="flex flex-col items-start justify-start gap-2 flex-grow">
+    <Card className="flex flex-col justify-betweenm w-full overflow-hidden p-6 md:p-8">
+      <div className="flex items-stretch justify-between gap-2 flex-grow">
         <div
           title={`You will earn ${quest.pointsValue} points for completing this quest`}
-          className="flex items-center space-x-1"
+          className="flex items-center gap-2"
         >
-          <FontAwesomeIcon
-            icon={faTrophy}
-            className="h-5 w-5 text-yellow-500"
-          />
-          <span className="font-medium text-lg">{quest.pointsValue}</span>
+          <FontAwesomeIcon icon={faTrophy} className="h-7 w-7 text-white" />
+          <span className="font-jersey text-center text-white text-[32px] font-normal font-['Jersey M54'] leading-relaxed">
+            {quest.pointsValue}
+          </span>
         </div>
-        <div className="flex flex-col gap-1.5 sm:gap-2 pt-2">
-          <CardTitle className="text-white/70 text-xs sm:text-sm leading-tight font-thin">
+        <div className="flex flex-col items-end justify-end gap-1.5 sm:gap-2 pt-2">
+          <CardTitle className="text-white text-[15px] leading-normal md:text-base">
             {quest.name}
           </CardTitle>
-          <CardDescription className="text-xs text-white/70 sm:text-sm leading-tight font-thin line-clamp-2 sm:line-clamp-none">
+          <CardDescription className="text-white text-[15px] leading-normal md:text-base">
             {quest.description}
           </CardDescription>
         </div>
       </div>
 
-      <CardContent className="pt-4">
-        <div className="flex flex-col">
+      <CardContent className="pt-7">
+        <div className="flex flex-col items-end justify-end">
           {/* Quest-specific actions */}
           {quest.verificationType === "social_follow" &&
             verificationData.platform === "twitter" && (
@@ -134,7 +133,7 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
                 className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
                   isQuestCompleted
                     ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-white text-purple-900 hover:bg-gray-200"
+                    : "bg-white text-purple hover:bg-gray-200"
                 }`}
               >
                 <FontAwesomeIcon icon={faXTwitter} />
@@ -146,15 +145,12 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
             verificationData.game_link && (
               <Button
                 asChild
-                className={`flex items-center space-x-1 text-sm px-5 py-2 h-9 w-28 mt-auto ${
+                className={`flex items-center space-x-2 text-sm px-5 py-2 h-9 w-28 mt-auto ${
                   isCompleted ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={isCompleted}
               >
-                <Link
-                  href={verificationData.game_link}
-                  className="w-full sm:w-auto"
-                >
+                <Link href={verificationData.game_link}>
                   <FontAwesomeIcon icon={faFootball} />
                   <span>Predict</span>
                 </Link>

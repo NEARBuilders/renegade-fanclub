@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     description: "Manage campaigns, teams, and quests for RNG Fan Club",
     images: [
       {
-        url: "/images/rngfanclub-logo-white.png",
+        url: "/images/logo_white.png",
         width: 1200,
         height: 630,
         alt: "RNG Fan Club Logo",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   twitter: {
     title: "Admin Dashboard | RNG Fan Club",
     description: "Manage campaigns, teams, and quests for RNG Fan Club",
-    images: ["/images/rngfanclub-logo-white.png"],
+    images: ["/images/logo_white.png"],
   },
 };
 

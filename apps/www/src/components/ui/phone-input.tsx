@@ -64,7 +64,7 @@ const InputComponent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <Input
     className={cn(
-      "h-12 text-lg rounded-e-lg rounded-s-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+      "h-12 text-lg rounded-e-full rounded-s-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
       className,
     )}
     {...props}
@@ -93,8 +93,7 @@ const CountrySelect = ({
       <PopoverTrigger asChild>
         <Button
           type="button"
-          variant="outline"
-          className="flex gap-1 h-12 rounded-e-none rounded-s-lg border-r-0 px-3 focus:z-10 focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          className="flex gap-1 h-12 rounded-e-none bg-background border border-e-none border-white rounded-s-full border-r-0 px-3 focus:z-10 focus:ring-2 focus:ring-ring focus:ring-offset-2"
           disabled={disabled}
         >
           <FlagComponent
@@ -104,7 +103,7 @@ const CountrySelect = ({
           <FontAwesomeIcon
             icon={faChevronDown}
             className={cn(
-              "-mr-2 h-4 w-4 opacity-50",
+              "-mr-2 h-4 w-4 opacity-50 text-primary",
               disabled ? "hidden" : "opacity-100",
             )}
           />

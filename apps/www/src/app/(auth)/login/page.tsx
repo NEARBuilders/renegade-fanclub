@@ -7,6 +7,7 @@ import { loginWithEmail, loginWithPhoneNumber } from "@/lib/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef, Suspense } from "react";
 import { Login } from "../_components/login";
+import { BackgroundImage } from "../_components/background-image";
 
 function LoginContent() {
   const searchParams = useSearchParams();
@@ -52,10 +53,18 @@ function LoginContent() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <div className="w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-bold text-center">
-          Sign in with {loginType === "email" ? "Email" : "Phone"}
-        </h1>
+      <div className="fixed inset-0">
+        {/* Base background image */}
+        <BackgroundImage />
+        {/* Overlay bg */}
+      </div>
+      <div className="w-full max-w-sm space-y-4 z-10">
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold leading-9">
+            Sign in with {loginType === "email" ? "Email" : "Phone"}
+          </h1>
+          <p className="leading-9">Earn points for each quest - be quick!</p>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2 [&_input]:bg-background">
             {loginType === "email" ? (

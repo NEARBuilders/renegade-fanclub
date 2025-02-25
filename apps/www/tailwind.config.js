@@ -4,6 +4,9 @@ module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
+      fontFamily: {
+        jersey: ['"Jersey M54"', "sans-serif"],
+      },
       container: {
         center: true,
         padding: {
