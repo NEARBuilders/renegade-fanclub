@@ -31,6 +31,7 @@ import {
 import { CopyLink } from "@/components/ui/copy-link";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { Title } from "@/components/ui/title";
 
 export const metadata: Metadata = {
   title: "My Profile | RNG Fan Club",
@@ -86,6 +87,11 @@ export default async function ProfilePage() {
       />
       <Container>
         <div className="px-2 pb-20 space-y-6">
+          <Title
+            title="PROFILE OVERVIEW"
+            description={"Hello, " + profile.username + "!"}
+          />
+
           <ProfileInfo profile={profile} />
 
           <Card>

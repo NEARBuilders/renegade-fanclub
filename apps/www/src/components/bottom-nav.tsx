@@ -6,12 +6,13 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBasketShopping,
+  faFileLines,
   faFootball,
   faHouse,
-  faMedal,
   faTrophy,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { faPagelines } from "@fortawesome/free-brands-svg-icons";
 
 export function BottomNav() {
   const currentPath = usePathname();
@@ -21,20 +22,30 @@ export function BottomNav() {
       icon: faHouse,
       label: "Home",
     },
+    {
+      to: "/profile",
+      icon: faUser,
+      label: "Profile",
+    },
     // {
     //   to: "/games",
     //   icon: faFootball,
     //   label: "Games",
     // },
-    {
-      to: "/shop",
-      icon: faBasketShopping,
-      label: "Shop",
-    },
+    // {
+    //   to: "/shop",
+    //   icon: faBasketShopping,
+    //   label: "Shop",
+    // },
     {
       to: "/leaderboard",
       icon: faTrophy,
       label: "Leaderboard",
+    },
+    {
+      to: "/terms",
+      icon: faFileLines,
+      label: "Terms",
     },
   ];
 
@@ -59,7 +70,7 @@ export function BottomNav() {
               <FontAwesomeIcon
                 icon={link.icon}
                 className={cn(
-                  "h-5 w-5 transition-transform duration-200",
+                  "h-6 w-6 transition-transform duration-200",
                   isActive && "scale-110",
                 )}
               />

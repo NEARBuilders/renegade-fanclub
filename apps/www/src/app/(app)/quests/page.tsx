@@ -8,6 +8,7 @@ import { getUserQuests, listQuests } from "@/lib/api/quests";
 import { QuestsList } from "./_components/quests-list";
 import { Metadata } from "next";
 import { Game } from "../games/[id]/_components/game";
+import { Title } from "@/components/ui/title";
 
 export const metadata: Metadata = {
   title: "Quests | RNG Fan Club",
@@ -56,11 +57,9 @@ export default async function QuestsPage() {
     <>
       <Header profile={profile} />
       <Container>
-        {/*game predictions*/}
-        <Game
-          gameId={gameId}
-          initialGame={initialGame}
-          predictionQuest={predictionQuest || undefined}
+        <Title
+          title="FINISH OUR QUESTS TO WIN!"
+          description="Earn points for each quest - be quick!"
         />
         {/* Quests List */}
         <QuestsList quests={quests} completedQuests={completedQuests} />

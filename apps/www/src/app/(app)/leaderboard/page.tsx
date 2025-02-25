@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container";
 import { Metadata } from "next";
 import { Leaderboard } from "./_components/leaderboard";
 import { getUserProfile, getUserQuests } from "@/lib/api";
+import { Title } from "@/components/ui/title";
 
 export const metadata: Metadata = {
   title: "Leaderboard | RNG Fan Club",
@@ -46,12 +47,10 @@ export default async function LeaderboardPage() {
       <Header profile={profile} />
       <Container>
         <div className="px-2 pb-20">
-          <div className="mb-8 flex items-center flex-col gap-2 text-center">
-            <h1 className="text-2xl sm:text-3xl font-bold">Leaderboard</h1>
-            <p className="text-white text-sm sm:text-base">
-              Top fans competing for Super Bowl tickets
-            </p>
-          </div>
+          <Title
+            title="Leaderboard"
+            description="Top fans competing for Super Bowl tickets"
+          />
           <Leaderboard />
         </div>
       </Container>
