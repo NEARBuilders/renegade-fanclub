@@ -9,7 +9,7 @@ export const metadata: Metadata = {
       "Set up your profile and select your favorite sports and teams",
     images: [
       {
-        url: "/images/rngfanclub-logo-white.png",
+        url: "/images/logo_white.png",
         width: 1200,
         height: 630,
         alt: "RNG Fan Club Logo",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "Join RNG Fan Club",
     description:
       "Set up your profile and select your favorite sports and teams",
-    images: ["/images/rngfanclub-logo-white.png"],
+    images: ["/images/logo_white.png"],
   },
 };
 

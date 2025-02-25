@@ -13,7 +13,7 @@ export const metadata: Metadata = {
       "Create, edit, and manage campaigns for RNG Fan Club events and competitions",
     images: [
       {
-        url: "/images/rngfanclub-logo-white.png",
+        url: "/images/logo_white.png",
         width: 1200,
         height: 630,
         alt: "RNG Fan Club Logo",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title: "Campaign Management | RNG Fan Club",
     description:
       "Create, edit, and manage campaigns for RNG Fan Club events and competitions",
-    images: ["/images/rngfanclub-logo-white.png"],
+    images: ["/images/logo_white.png"],
   },
 };
 

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
       "Customize your sports and teams preferences. Select your favorite sports and teams to personalize your experience.",
     images: [
       {
-        url: "/images/rngfanclub-logo-white.png",
+        url: "/images/logo_white.png",
         width: 1200,
         height: 630,
         alt: "RNG Fan Club Logo",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title: "Sports & Teams Preferences | RNG Fan Club",
     description:
       "Customize your sports and teams preferences. Select your favorite sports and teams to personalize your experience.",
-    images: ["/images/rngfanclub-logo-white.png"],
+    images: ["/images/logo_white.png"],
   },
 };
 

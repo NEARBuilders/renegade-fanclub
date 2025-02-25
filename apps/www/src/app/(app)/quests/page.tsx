@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       "Complete exciting quests and challenges to earn points and win Super Bowl tickets. Track your progress and unlock achievements!",
     images: [
       {
-        url: "/images/rngfanclub-logo-white.png",
+        url: "/images/logo_white.png",
         width: 1200,
         height: 630,
         alt: "RNG Fan Club Logo",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     title: "Quests | RNG Fan Club",
     description:
       "Complete exciting quests and challenges to earn points and win Super Bowl tickets. Track your progress and unlock achievements!",
-    images: ["/images/rngfanclub-logo-white.png"],
+    images: ["/images/logo_white.png"],
   },
 };
 

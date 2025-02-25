@@ -17,7 +17,7 @@ export const metadata: Metadata = {
       "See the top fans competing for Super Bowl tickets. Track points from predictions and completed quests.",
     images: [
       {
-        url: "/images/rngfanclub-logo-white.png",
+        url: "/images/logo_white.png",
         width: 1200,
         height: 630,
         alt: "RNG Fan Club Logo",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "Leaderboard | RNG Fan Club",
     description:
       "See the top fans competing for Super Bowl tickets. Track points from predictions and completed quests.",
-    images: ["/images/rngfanclub-logo-white.png"],
+    images: ["/images/logo_white.png"],
   },
 };
 

@@ -93,7 +93,10 @@ export function Header({
           ) : totalPoints !== undefined ? (
             <div className="flex items-center space-x-2 bg-white/10 px-5 py-1.5 rounded-full">
               <FontAwesomeIcon icon={faTrophy} className="h-5 w-5 text-white" />
-              <span className="text-lg font-jersey" data-testid="user-points">
+              <span
+                className="text-white text-lg font-normal leading-relaxed font-jersey"
+                data-testid="user-points"
+              >
                 {totalPoints}
               </span>
             </div>

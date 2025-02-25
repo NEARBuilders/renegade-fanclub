@@ -4,6 +4,29 @@ import { Container } from "@/components/ui/container";
 import { getUserProfile } from "@/lib/api";
 import { Title } from "@/components/ui/title";
 import Terms from "./_components/terms";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms & Conditions | RNG Fan Club",
+  description: "The rules are the rules...",
+  openGraph: {
+    title: "Terms & Conditions | RNG Fan Club",
+    description: "The rules are the rules...",
+    images: [
+      {
+        url: "/images/logo_white.png",
+        width: 1200,
+        height: 630,
+        alt: "RNG Fan Club Logo",
+      },
+    ],
+  },
+  twitter: {
+    title: "Terms & Conditions | RNG Fan Club",
+    description: "The rules are the rules...",
+    images: ["/images/logo_white.png"],
+  },
+};
 
 export default async function ShopPage() {
   const [profile] = await Promise.all([getUserProfile()]);

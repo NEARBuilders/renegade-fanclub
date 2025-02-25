@@ -14,7 +14,7 @@ export const metadata: Metadata = {
       "Welcome to RNG Fan Club, your destination for amazing games and events",
     images: [
       {
-        url: "/images/rngfanclub-logo-white.png",
+        url: "/images/logo_white.png",
         width: 1200,
         height: 630,
         alt: "RNG Fan Club Logo",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Home | RNG Fan Club",
     description:
       "Welcome to RNG Fan Club, your destination for amazing games and events",
-    images: ["/images/rngfanclub-logo-white.png"],
+    images: ["/images/logo_white.png"],
   },
 };
 

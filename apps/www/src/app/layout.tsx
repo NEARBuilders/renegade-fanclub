@@ -43,7 +43,7 @@ export const metadata: Metadata = {
       "Join RNG Fan Club to predict sports outcomes, compete with others, and win rewards on the NEAR blockchain.",
     images: [
       {
-        url: "/images/rngfanclub-logo-white.png",
+        url: "/images/logo_white.png",
         width: 1200,
         height: 630,
         alt: "RNG Fan Club Logo",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     title: "RNG Fan Club | Sports Prediction Platform",
     description:
       "Join RNG Fan Club to predict sports outcomes, compete with others, and win rewards on the NEAR blockchain.",
-    images: ["/images/rngfanclub-logo-white.png"],
+    images: ["/images/logo_white.png"],
   },
   icons: {
     icon: "/images/favicon.jpg",
