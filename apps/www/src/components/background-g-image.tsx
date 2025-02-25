@@ -13,7 +13,7 @@ export function BackgroundImageMain({ overlay = true }: BackgroundImageProps) {
   return (
     <div className="relative w-full h-full">
       <Image
-        src="/images/bg-2.png"
+        src="/images/bg-2.webp"
         alt="Stadium at Night Background"
         fill
         priority
@@ -33,7 +33,7 @@ export function BackgroundImageMain({ overlay = true }: BackgroundImageProps) {
               src="/images/GFX-2.png"
               alt="Overlay Graphic"
               fill
-              className="object-cover"
+              className="object-cover object-center"
               unoptimized
               onLoad={() => setIsLoaded(true)}
             />

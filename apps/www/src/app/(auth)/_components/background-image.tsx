@@ -17,7 +17,7 @@ export function BackgroundImage() {
       >
         <div className="absolute inset-0">
           <Image
-            src="/images/rng-bg.png"
+            src="/images/rng_bg.webp"
             alt="Stadium at Night Background"
             fill
             priority

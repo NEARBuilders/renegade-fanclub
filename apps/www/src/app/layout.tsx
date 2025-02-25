@@ -72,7 +72,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="fixed inset-0 z-0">
+        <div className="fixed inset-0 z-0 bg-black">
           {/* Base background image */}
           <BackgroundImageMain />
           {/* Overlay bg */}
