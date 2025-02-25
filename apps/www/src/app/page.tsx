@@ -1,9 +1,10 @@
 import { Container } from "@/components/ui/container";
 import Image from "next/image";
 import { Login } from "./(auth)/_components/login";
+import { BackgroundImage } from "./(auth)/_components/background-image";
+import { SplashScreen } from "@/components/splash-screen";
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { BackgroundImage } from "./(auth)/_components/background-image";
 
 export const metadata: Metadata = {
   title: "Home | RNG Fan Club",
@@ -39,13 +40,10 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      <SplashScreen />
       {/* Background layers */}
       <div className="fixed inset-0 z-5">
-        {/* Base background image */}
         <BackgroundImage />
-        {/* Overlay bg */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black from-20% to-transparent to-30% sm:from-10% sm:to-40% " />
-        <div className="absolute inset-0 bg-gradient-to-t from-black from-10% to-transparent to-30% sm:from-5% sm:to-40% " />
       </div>
       {/* Page content with contrast from the background (whether it is the black gradient, or the faded image) */}
       <Container className="relative z-10">
