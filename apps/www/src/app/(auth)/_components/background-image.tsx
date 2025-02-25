@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
+import RngBg from "../../../../public/images/rng-bg.png";
+import Gfx from "../../../../public/images/GFX-1.png";
 
 export function BackgroundImage() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -16,7 +18,7 @@ export function BackgroundImage() {
         className="relative flex flex-col w-full h-full items-center justify-center"
       >
         <Image
-          src={"/images/RNG-bg.png"}
+          src={RngBg}
           alt="Stadium at Night Background"
           fill
           priority
@@ -29,7 +31,7 @@ export function BackgroundImage() {
       {/* Overlay Image */}
       <div className="absolute inset-0">
         <Image
-          src="/images/GFX-1.png"
+          src={Gfx}
           alt="Overlay Graphic"
           fill
           className="object-cover"
