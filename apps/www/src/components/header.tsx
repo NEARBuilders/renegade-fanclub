@@ -50,7 +50,7 @@ export function Header({
           ) : profile ? (
             <Avatar
               onClick={() => router.push("/profile")}
-              className="h-14 w-14 border border-secondary cursor-pointer"
+              className="h-14 w-14 border-2 border-secondary cursor-pointer"
             >
               <AvatarImage
                 src={profile.avatar ?? undefined}
@@ -91,7 +91,8 @@ export function Header({
             <div className="flex items-center space-x-2 bg-white/10 px-5 py-1.5 rounded-full">
               <FontAwesomeIcon icon={faTrophy} className="h-5 w-5 text-white" />
               <span
-                className="text-white text-lg font-normal leading-relaxed font-jersey"
+                className="text-white text-lg font-normal leading-relaxed font-jersey
+                overflow-hidden whitespace-nowrap text-ellipsis relative max-w-[100px] "
                 data-testid="user-points"
               >
                 {totalPoints}

@@ -47,7 +47,7 @@ export function ProfileInfo({ profile, completedQuests }: ProfileInfoProps) {
       </div>
 
       <Card className="flex flex-col items-center p-6 gap-2">
-        <Avatar className="w-[188px] h-[188px] bg-black rounded-full border-8 border-[#39ff14] ">
+        <Avatar className="w-[188px] h-[188px] bg-black rounded-full border-8 border-[#39ff14]">
           <AvatarImage
             src={profile.avatar ?? undefined}
             alt={profile.username}
