@@ -76,7 +76,7 @@ export default function RootLayout({
           {/* Base background image */}
           <BackgroundImageMain />
           {/* Overlay bg */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black from-15% to-transparent to-25% sm:from-10% sm:to-40% " />
+          <div className="absolute inset-0 bg-gradient-to-b from-black from-20% to-transparent to-35% sm:from-10% sm:to-40% " />
           <div className="absolute inset-0 bg-gradient-to-t from-black from-10% to-transparent to-30% sm:from-5% sm:to-40%" />
         </div>
         <div

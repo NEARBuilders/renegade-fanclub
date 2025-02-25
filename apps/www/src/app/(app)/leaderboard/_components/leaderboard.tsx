@@ -50,7 +50,7 @@ export function Leaderboard() {
       ) : (
         <>
           <div className="relative flex justify-center mt-28 gap-6 ">
-            {[2, 1, 2].map((rank, i) => {
+            {[2, 1, 3].map((rank, i) => {
               const ranking = leaderboard.rankings.find((r) => r.rank === rank);
               if (!ranking) return null;
 
@@ -129,11 +129,11 @@ export function Leaderboard() {
           </div>
 
           {leaderboard.rankings
-            .slice(1)
+            .slice(3)
             .map((ranking: LeaderboardRankingResponse) => (
-              <Card
+              <div
                 key={ranking.userId}
-                className="flex items-center gap-4 h-[72px] p-6 bg-black/90 rounded-lg border border-[#717171] justify-between"
+                className="flex items-center mt-5 gap-4 h-[72px] p-6 bg-black/90 rounded-lg border border-[#717171] justify-between"
               >
                 {/* <span className="flex items-center justify-center w-8 h-8 text-xl font-bold">
                   {ranking.rank}
@@ -167,7 +167,7 @@ export function Leaderboard() {
                     {ranking.questPoints}
                   </p> */}
                 </div>
-              </Card>
+              </div>
             ))}
         </>
       )}

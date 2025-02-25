@@ -43,12 +43,9 @@ export function Header({
           {showBackButton ? (
             <button
               onClick={() => router.back()}
-              className="flex items-center justify-center h-10 w-10 rounded-xl bg-white/5 hover:bg-white/10 active:scale-95 transition-all duration-200"
+              className="flex items-center justify-center h-10 w-10 rounded-xl bg-none hover:bg-white/10 active:scale-95 transition-all duration-200"
             >
-              <FontAwesomeIcon
-                icon={faArrowLeft}
-                className="h-5 w-5 text-white/90"
-              />
+              <FontAwesomeIcon icon={faArrowLeft} className="h-5 w-5 text-" />
             </button>
           ) : profile ? (
             <Avatar

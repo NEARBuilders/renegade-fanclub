@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { completeQuest } from "@/lib/api/quests";
@@ -105,18 +104,18 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
       <div className="flex items-stretch justify-between gap-2 flex-grow">
         <div
           title={`You will earn ${quest.pointsValue} points for completing this quest`}
-          className="flex items-center space-x-1"
+          className="flex items-center gap-2"
         >
           <FontAwesomeIcon icon={faTrophy} className="h-7 w-7 text-white" />
-          <span className="font-jersey font-medium text-lg text-[32px] leading-relaxed">
+          <span className="font-jersey text-center text-white text-[32px] font-normal font-['Jersey M54'] leading-relaxed">
             {quest.pointsValue}
           </span>
         </div>
         <div className="flex flex-col items-end justify-end gap-1.5 sm:gap-2 pt-2">
-          <CardTitle className="text-white text-sm sm:text-sm leading-tight">
+          <CardTitle className="text-white text-[15px] leading-normal md:text-base">
             {quest.name}
           </CardTitle>
-          <CardDescription className="text-sm text-white md:text-base leading-tight line-clamp-2 sm:line-clamp-none">
+          <CardDescription className="text-white text-[15px] leading-normal md:text-base">
             {quest.description}
           </CardDescription>
         </div>
