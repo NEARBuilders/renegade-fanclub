@@ -8,7 +8,7 @@
       "binding": "DB",
       "database_id": "7023ee16-8ff9-4869-a91e-2c699e3d30ae",
       "database_name": "rngfanclub-dev",
-      "migrations_table": "<d1_migrations>",
+      "migrations_table": "d1_migrations",
       "migrations_dir": "migrations/"
     }
   ],
