@@ -52,7 +52,6 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -96,42 +95,81 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   };
 
   const avatarSubmit = async () => {
-    if (!selectedFile) return;
-    const fileUrl = selectedFile; // Upload avatar to Supabase storage then update link here
+    const file = fileInputRef.current?.files?.[0];
+    if (!file) return;
+
     try {
       setIsLoading(true);
-      await updateUserProfile({
-        avatar: fileUrl,
+
+      // Upload to Vercel Blob
+      const response = await fetch(`/api/avatar/upload?filename=${file.name}`, {
+        method: "POST",
+        body: file,
       });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to upload file");
+      }
+
+      const blob = await response.json();
+
+      // Update user profile with new avatar URL
+      await updateUserProfile({
+        avatar: blob.url,
+      });
+
       router.refresh();
       toast({
         title: "Success",
         description: "Avatar updated successfully!",
       });
+
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (error) {
       console.error("Failed to update avatar:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to update avatar. Please try again.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to update avatar. Please try again.",
       });
     } finally {
       setIsLoading(false);
-      setSelectedFile(null);
     }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && ["image/jpeg", "image/png"].includes(file.type)) {
-      setSelectedFile(URL.createObjectURL(file));
-    } else {
+    if (!file) return;
+
+    // Validate file type
+    if (!["image/jpeg", "image/png"].includes(file.type)) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Only JPG and PNG files are allowed.",
       });
+      event.target.value = "";
+      return;
     }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "File size too large. Maximum size is 5MB.",
+      });
+      event.target.value = "";
+      return;
+    }
+    avatarSubmit();
   };
   return (
     <>
@@ -160,7 +198,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <AvatarImage
-                      src={selectedFile || profile?.avatar || undefined}
+                      src={profile?.avatar || undefined}
                       alt={profile?.username || "User"}
                     />
                     <AvatarFallback className="bg-white/5 text-3xl">
@@ -168,14 +206,6 @@ export function SettingsForm({ profile }: SettingsFormProps) {
                     </AvatarFallback>
                   </Avatar>
                 </div>
-
-                {selectedFile && (
-                  <FontAwesomeIcon
-                    icon={isLoading ? faCircleNotch : faCheck}
-                    onClick={avatarSubmit}
-                    className={`bg-white p-2 rounded-full h-3 w-3 text-black cursor-pointer ${isLoading && "animate-spin"}`}
-                  />
-                )}
               </div>
               <FormField
                 control={form.control}
