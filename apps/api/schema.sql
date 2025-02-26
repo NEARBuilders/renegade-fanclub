@@ -5,6 +5,7 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     avatar TEXT,
     profile_data TEXT DEFAULT '{}', -- Stores custom profile data as JSON string
+    referred_by VARCHAR(42) REFERENCES users(id) ON DELETE CASCADE,
     created_at DATETIME DEFAULT (datetime('now')),
     updated_at DATETIME DEFAULT (datetime('now'))
 );
@@ -226,6 +227,9 @@ CREATE INDEX idx_teams_sport_id ON teams(sport_id);
 
 -- New composite index for efficient user prediction queries
 CREATE INDEX idx_user_predictions_user_game ON user_predictions(user_id, game_id);
+
+-- Index for referral lookups
+CREATE INDEX idx_users_referred_by ON users(referred_by);
 
 -- New view for user predictions with game details
 CREATE VIEW user_predictions_with_game_details AS

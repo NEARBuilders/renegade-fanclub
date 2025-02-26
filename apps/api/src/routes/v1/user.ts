@@ -73,6 +73,9 @@ export async function handleCreateUserProfile(
         );
       }
 
+      // Get referredBy from JWT claims
+      const referredBy = authenticatedRequest.user?.referredBy;
+
       // Insert new user
       const stmt = env.DB.prepare(
         `
@@ -82,10 +85,11 @@ export async function handleCreateUserProfile(
           email, 
           avatar,
           profile_data,
+          referred_by,
           created_at,
           updated_at
         )
-        VALUES (?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+        VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
         RETURNING *
       `,
       ).bind(
@@ -94,7 +98,72 @@ export async function handleCreateUserProfile(
         profile.email,
         profile.avatar || null,
         JSON.stringify(profile.profileData || {}),
+        referredBy || null,
       );
+
+      user = await stmt.first();
+
+      // If this is a referred user, complete the quest for the referrer
+      if (referredBy) {
+        try {
+          // Get the referral quest
+          const questStmt = env.DB.prepare(
+            `
+            SELECT q.*, c.status as campaign_status
+            FROM quests q
+            JOIN campaigns c ON q.campaign_id = c.id
+            WHERE q.verification_type = 'referral'
+            AND c.status = 'active'
+            LIMIT 1
+          `,
+          );
+
+          const quest = await questStmt.first();
+          if (quest) {
+            // Complete the quest for the referrer
+            await env.DB.batch([
+              env.DB.prepare(
+                `
+                INSERT INTO user_quest_completions (
+                  user_id, quest_id, points_earned, verification_proof
+                )
+                VALUES (?, ?, ?, ?)
+              `,
+              ).bind(
+                referredBy,
+                quest.id,
+                quest.points_value,
+                JSON.stringify({
+                  type: 'referral',
+                  timestamp: new Date().toISOString()
+                }),
+              ),
+              env.DB.prepare(
+                `
+                INSERT INTO user_points (
+                  user_id, campaign_id, total_points, prediction_points, quest_points
+                )
+                VALUES (?, ?, ?, 0, ?)
+                ON CONFLICT(user_id, campaign_id) DO UPDATE SET
+                  total_points = total_points + ?,
+                  quest_points = quest_points + ?,
+                  last_updated = datetime('now')
+              `,
+              ).bind(
+                referredBy,
+                quest.campaign_id,
+                quest.points_value,
+                quest.points_value,
+                quest.points_value,
+                quest.points_value,
+              ),
+            ]);
+          }
+        } catch (error) {
+          console.error("[Complete Referral Quest Error]", error);
+          // Don't fail user creation if quest completion fails
+        }
+      }
 
       user = await stmt.first();
     }

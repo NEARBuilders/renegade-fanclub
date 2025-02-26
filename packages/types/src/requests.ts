@@ -3,6 +3,7 @@ export interface CreateProfileRequest {
   email: string;
   avatar?: string | null;
   profileData?: Record<string, unknown>;
+  referredBy?: string;
 }
 
 export interface UpdateProfileRequest {
