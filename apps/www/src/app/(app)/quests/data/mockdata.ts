@@ -19,6 +19,7 @@ export const getQuests = async () => {
       pointsValue: 100,
       verificationType: "social_follow",
       verificationData: {
+        action: "follow",
         platform: "twitter",
         intent_url: "https://twitter.com/intent/follow?screen_name=rngfanclub",
       },
@@ -36,6 +37,7 @@ export const getQuests = async () => {
       pointsValue: 100,
       verificationType: "social_follow",
       verificationData: {
+        action: "follow",
         platform: "twitter",
         intent_url: "https://x.com/SweatEconomy",
       },
@@ -53,6 +55,7 @@ export const getQuests = async () => {
       pointsValue: 100,
       verificationType: "social_follow",
       verificationData: {
+        action: "follow",
         platform: "Instagram",
         intent_url: "https://www.instagram.com/rngfanclub/",
       },
@@ -70,7 +73,7 @@ export const getQuests = async () => {
       pointsValue: 250,
       verificationType: "signup_scan",
       verificationData: {
-        action: "Sign-up",
+        action: "sign-up",
         platform: "sweatcoin",
         intent_url: "123456789",
       },
@@ -87,7 +90,7 @@ export const getQuests = async () => {
       description: "sharing our referral link",
       pointsValue: 100,
       verificationType: "invite",
-      verificationData: { action: "Copy", invite_link: link },
+      verificationData: { action: "copy", invite_link: link },
       startDate: "2024-02-01T00:00:00Z",
       endDate: "2024-02-28T23:59:59Z",
       createdAt: "2024-01-25T12:00:00Z",
@@ -101,7 +104,7 @@ export const getQuests = async () => {
       description: "QR billboard",
       pointsValue: 500,
       verificationType: "signup_scan",
-      verificationData: { action: "Scan", intent_url: "123456789" },
+      verificationData: { action: "scan", intent_url: "123456789" },
       startDate: "2024-02-01T00:00:00Z",
       endDate: "2024-02-28T23:59:59Z",
       createdAt: "2024-01-25T12:00:00Z",
