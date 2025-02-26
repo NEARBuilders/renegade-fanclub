@@ -4,19 +4,19 @@
   "private": true,
   "scripts": {
     "init": "cp .dev.vars.example .dev.vars && bun run init:local",
-    "check": "tsc && wrangler --experimental-json-config deploy --dry-run",
-    "deploy": "wrangler --experimental-json-config deploy",
-    "dev": "wrangler --experimental-json-config dev",
-    "types": "wrangler --experimental-json-config types",
-    "db:migrate:create": "wrangler d1 migrations create rngfanclub-dev",
-    "db:migrate:list": "wrangler d1 migrations list rngfanclub-dev",
-    "db:migrate:apply": "wrangler d1 migrations apply rngfanclub-dev",
-    "db:seed:local": "wrangler d1 execute rngfanclub-dev --local --file=seed.sql",
-    "db:seed:remote": "wrangler d1 execute rngfanclub-dev --remote --file=seed.sql",
+    "check": "tsc && supabase db push --dry-run",
+    "deploy": "supabase db push && supabase functions deploy",
+    "dev": "supabase start",
+    "types": "supabase gen types typescript --project-id rngfanclub-dev",
+    "db:migrate:create": "supabase migration new rngfanclub-dev",
+    "db:migrate:list": "supabase migration list",
+    "db:migrate:apply": "supabase db push",
+    "db:seed:local": "supabase db reset --file=seed.sql",
+    "db:seed:remote": "supabase db reset --file=seed.sql",
     "init:local": "bun run db:clean && bun run db:deploy:local && bun run db:seed:local",
-    "db:clean": "rm -rf .wrangler/state",
-    "db:deploy:local": "bunx wrangler d1 execute rngfanclub-dev --local --file=schema.sql",
-    "db:deploy:remote": "bunx wrangler d1 execute rngfanclub-dev --remote --file=schema.sql"
+    "db:clean": "rm -rf .supabase/state",
+    "db:deploy:local": "supabase db reset --file=schema.sql",
+    "db:deploy:remote": "supabase db reset --file=schema.sql"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.5.2",
@@ -26,6 +26,8 @@
     "wrangler": "^3.97.0"
   },
   "dependencies": {
-    "jose": "^5.9.6"
+    "@supabase/supabase-js": "^2.49.1",
+    "jose": "^5.9.6",
+    "supabase": "^2.12.1"
   }
 }
