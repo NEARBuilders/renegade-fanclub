@@ -9,8 +9,12 @@ import {
 } from "@/components/ui/card";
 import { completeQuest } from "@/lib/api/quests";
 import { QuestResponse } from "@renegade-fanclub/types";
-import { faXTwitter } from "@fortawesome/free-brands-svg-icons";
-import { faTrophy, faFootball } from "@fortawesome/free-solid-svg-icons";
+import { faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons";
+import {
+  faTrophy,
+  faFootball,
+  faCopy,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useCallback, useState } from "react";
@@ -34,6 +38,7 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
     game_id?: number;
     game_link?: string;
     game_type?: string;
+    invite_link: string;
   };
 
   const handleQuestComplete = useCallback(async () => {
@@ -99,6 +104,15 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
     await handleQuestComplete();
   }, [handleQuestComplete, verificationData.intent_url]);
 
+  const handleCopy = useCallback(async () => {
+    // Copy the invite link to the clipboard
+    await navigator.clipboard.writeText(verificationData.invite_link);
+    toast({
+      title: "Success",
+      description: "Link copied to clipboard!",
+    });
+  }, [verificationData.invite_link]);
+
   return (
     <Card className="flex flex-col justify-betweenm w-full overflow-hidden p-6 md:p-8">
       <div className="flex items-stretch justify-between gap-2 flex-grow">
@@ -124,22 +138,57 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
       <CardContent className="pt-7">
         <div className="flex flex-col items-end justify-end">
           {/* Quest-specific actions */}
-          {quest.verificationType === "social_follow" &&
-            verificationData.platform === "twitter" && (
-              <button
-                name={quest.verificationType}
-                onClick={handleSocialFollow}
-                disabled={isQuestCompleted}
-                className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
-                  isQuestCompleted
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-white text-purple hover:bg-gray-200"
-                }`}
-              >
-                <FontAwesomeIcon icon={faXTwitter} />
-                <span>Follow</span>
-              </button>
-            )}
+          {quest.verificationType === "social_follow" && (
+            <button
+              name={quest.verificationType}
+              onClick={handleSocialFollow}
+              disabled={isQuestCompleted}
+              className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
+                isQuestCompleted
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-white text-purple hover:bg-gray-200"
+              }`}
+            >
+              <FontAwesomeIcon
+                icon={
+                  verificationData.platform == "twitter"
+                    ? faXTwitter
+                    : faInstagram
+                }
+              />
+              <span>Follow</span>
+            </button>
+          )}
+
+          {quest.verificationType === "signup_scan" && (
+            <button
+              name={quest.verificationType}
+              onClick={handleSocialFollow}
+              disabled={isQuestCompleted}
+              className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
+                isQuestCompleted
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-purple text-white hover:bg-purple/80"
+              }`}
+            >
+              {verificationData.action}
+            </button>
+          )}
+
+          {quest.verificationType === "invite" && (
+            <button
+              name={quest.verificationType}
+              onClick={handleCopy}
+              className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
+                isQuestCompleted
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-white text-black hover:bg-gray-200 "
+              }`}
+            >
+              <FontAwesomeIcon icon={faCopy} />
+              <span>Copy</span>
+            </button>
+          )}
 
           {quest.verificationType === "prediction" &&
             verificationData.game_link && (
