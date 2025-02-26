@@ -81,7 +81,7 @@ export default function RootLayout({
         </div>
         <div
           className={cn(
-            "min-h-[100dvh] px-2 w-screen overflow-x-hidden relative",
+            "min-h-[100dvh] px-2 w-screen overflow-hidden relative",
             "z-10",
           )}
         >

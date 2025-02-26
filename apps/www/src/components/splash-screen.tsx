@@ -45,13 +45,13 @@ export const SplashScreen = () => {
       </div>
 
       <div className="relative flex flex-col justify-between h-screen w-full ">
-        <div className="relative flex items-start justify-start w-full py-20 px-4 sm:py-16">
+        <div className="relative flex items-start justify-start w-full py-14 px-4 sm:py-16">
           <p className=" text-white text-[75px] font-bold font-['Inter'] leading-[61px]">
             THE FUTURE
           </p>
         </div>
 
-        <div className="relative flex flex-col items-end justify-end w-full pb-16 px-4 sm:pb-8 break-word overflow-hidden space-y-8 sm:space-y-6">
+        <div className="relative flex flex-col items-end justify-end w-full pb-20 px-4 sm:pb-8 break-word overflow-hidden space-y-8 sm:space-y-6">
           <p className="text-right text-white text-5xl font-bold leading-[61px] ">
             OF FAN ENGAGEMENT
           </p>
