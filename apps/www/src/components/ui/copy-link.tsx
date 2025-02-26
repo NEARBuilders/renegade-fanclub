@@ -20,7 +20,7 @@ interface ReferLinkProps {
   link: string;
 }
 
-export function CopyLink({ title, description, link }: ReferLinkProps) {
+export function CopyLink({ link }: ReferLinkProps) {
   const { toast } = useToast();
   const onCopy = () => {
     navigator.clipboard.writeText(origin + link);
