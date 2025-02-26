@@ -4,8 +4,9 @@ export const revalidate = 0;
 import { Header } from "@/components/header";
 import { Container } from "@/components/ui/container";
 import { getUserProfile } from "@/lib/api";
-import { getUserQuests } from "@/lib/api/quests";
+import { getUserQuests, listQuests } from "@/lib/api/quests";
 import { QuestsList } from "./_components/quests-list";
+import { QuestSourceHandler } from "./_components/quest-source-handler";
 import { Metadata } from "next";
 import { Title } from "@/components/ui/title";
 import { getQuests } from "./data/mockdata";
@@ -36,15 +37,15 @@ export const metadata: Metadata = {
 };
 
 export default async function QuestsPage() {
-  // const apiQuests = await listQuests();
   const [profile, completedQuests, quests] = await Promise.all([
     getUserProfile(),
     getUserQuests(),
-    getQuests(),
+    listQuests(),
   ]);
 
   return (
     <>
+      <QuestSourceHandler />
       <Header profile={profile} />
       <Container>
         <Title
