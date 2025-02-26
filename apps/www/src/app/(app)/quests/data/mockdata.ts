@@ -1,20 +1,9 @@
-import { getUserProfile } from "@/lib/api";
-
-const getInviteLink = async () => {
-  const profile = await getUserProfile();
-  const origin = "https://rngfanclub.com";
-  return `${origin}/invite?ref=${profile.id}`;
-};
-
 export const getQuests = async () => {
-  // Get the invite link for the mock data
-  const link = await getInviteLink();
-
   return [
     {
       id: 1,
       campaignId: 1,
-      name: "Following",
+      name: "Follow",
       description: "@rngfanclub on X",
       pointsValue: 100,
       verificationType: "social_follow",
@@ -32,8 +21,8 @@ export const getQuests = async () => {
     {
       id: 2,
       campaignId: 1,
-      name: "Following",
-      description: "@Sweatcoin on X",
+      name: "Follow",
+      description: "@SweatEconomy on X",
       pointsValue: 100,
       verificationType: "social_follow",
       verificationData: {
@@ -50,7 +39,7 @@ export const getQuests = async () => {
     {
       id: 3,
       campaignId: 1,
-      name: "Following",
+      name: "Follow",
       description: "@rngfanclub on Instagram",
       pointsValue: 100,
       verificationType: "social_follow",
@@ -75,7 +64,7 @@ export const getQuests = async () => {
       verificationData: {
         action: "sign-up",
         platform: "sweatcoin",
-        intent_url: "123456789",
+        app_url: "https://apps.apple.com/us/app/sweat-wallet/id1619316571",
       },
       startDate: "2024-02-01T00:00:00Z",
       endDate: "2024-02-28T23:59:59Z",
@@ -86,11 +75,11 @@ export const getQuests = async () => {
     {
       id: 5,
       campaignId: 1,
-      name: "Add more points",
-      description: "sharing our referral link",
+      name: "Refer a friend",
+      description: "and they create an account",
       pointsValue: 100,
       verificationType: "invite",
-      verificationData: { action: "copy", invite_link: link },
+      verificationData: { action: "copy" },
       startDate: "2024-02-01T00:00:00Z",
       endDate: "2024-02-28T23:59:59Z",
       createdAt: "2024-01-25T12:00:00Z",
@@ -100,10 +89,10 @@ export const getQuests = async () => {
     {
       id: 6,
       campaignId: 1,
-      name: "Scanning the",
-      description: "QR billboard",
+      name: "Scan QR Code",
+      description: "Located on the corner of X and X",
       pointsValue: 500,
-      verificationType: "signup_scan",
+      verificationType: "scan_qrcode",
       verificationData: { action: "scan", intent_url: "123456789" },
       startDate: "2024-02-01T00:00:00Z",
       endDate: "2024-02-28T23:59:59Z",
@@ -114,11 +103,15 @@ export const getQuests = async () => {
     {
       id: 7,
       campaignId: 1,
-      name: "Walking 2000 steps and",
-      description: "scanning the finish line QR",
+      name: "Walk 2000 steps and",
+      description: "post a screenshot on X",
       pointsValue: 1000,
-      verificationType: "signup_scan",
-      verificationData: { action: "Scan", intent_url: "123456789" },
+      verificationType: "social_post",
+      verificationData: {
+        action: "post",
+        platform: "twitter",
+        intent_url: "https://twitter.com/intent/tweet?text=@rngfanclub @sweateconomy [ATTACH SCREENSHOT OF 2000 STEPS IN SWEATCOIN MOBILE APP]"
+      },
       startDate: "2024-02-01T00:00:00Z",
       endDate: "2024-02-28T23:59:59Z",
       createdAt: "2024-01-25T12:00:00Z",
