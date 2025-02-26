@@ -3,12 +3,12 @@ export const revalidate = 0;
 
 import { Header } from "@/components/header";
 import { Container } from "@/components/ui/container";
-import { getGame, getUserProfile } from "@/lib/api";
-import { getUserQuests, listQuests } from "@/lib/api/quests";
+import { getUserProfile } from "@/lib/api";
+import { getUserQuests } from "@/lib/api/quests";
 import { QuestsList } from "./_components/quests-list";
 import { Metadata } from "next";
-import { Game } from "../games/[id]/_components/game";
 import { Title } from "@/components/ui/title";
+import { getQuests } from "./data/mockdata";
 
 export const metadata: Metadata = {
   title: "Quests | RNG Fan Club",
@@ -36,10 +36,11 @@ export const metadata: Metadata = {
 };
 
 export default async function QuestsPage() {
-  const quests = await listQuests();
-  const [profile, completedQuests] = await Promise.all([
+  // const apiQuests = await listQuests();
+  const [profile, completedQuests, quests] = await Promise.all([
     getUserProfile(),
     getUserQuests(),
+    getQuests(),
   ]);
 
   return (
