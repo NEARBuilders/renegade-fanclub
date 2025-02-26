@@ -52,7 +52,6 @@ export function SettingsForm({ profile }: SettingsFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -104,13 +103,13 @@ export function SettingsForm({ profile }: SettingsFormProps) {
 
       // Upload to Vercel Blob
       const response = await fetch(`/api/avatar/upload?filename=${file.name}`, {
-        method: 'POST',
+        method: "POST",
         body: file,
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to upload file');
+        throw new Error(error.error || "Failed to upload file");
       }
 
       const blob = await response.json();
@@ -128,18 +127,20 @@ export function SettingsForm({ profile }: SettingsFormProps) {
 
       // Clear the file input
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     } catch (error) {
       console.error("Failed to update avatar:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to update avatar. Please try again.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to update avatar. Please try again.",
       });
     } finally {
       setIsLoading(false);
-      setSelectedFile(null);
     }
   };
 
@@ -154,7 +155,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
         title: "Error",
         description: "Only JPG and PNG files are allowed.",
       });
-      event.target.value = '';
+      event.target.value = "";
       return;
     }
 
@@ -165,11 +166,10 @@ export function SettingsForm({ profile }: SettingsFormProps) {
         title: "Error",
         description: "File size too large. Maximum size is 5MB.",
       });
-      event.target.value = '';
+      event.target.value = "";
       return;
     }
-
-    setSelectedFile(URL.createObjectURL(file));
+    avatarSubmit();
   };
   return (
     <>
@@ -198,7 +198,7 @@ export function SettingsForm({ profile }: SettingsFormProps) {
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <AvatarImage
-                      src={selectedFile || profile?.avatar || undefined}
+                      src={profile?.avatar || undefined}
                       alt={profile?.username || "User"}
                     />
                     <AvatarFallback className="bg-white/5 text-3xl">
@@ -206,14 +206,6 @@ export function SettingsForm({ profile }: SettingsFormProps) {
                     </AvatarFallback>
                   </Avatar>
                 </div>
-
-                {selectedFile && (
-                  <FontAwesomeIcon
-                    icon={isLoading ? faCircleNotch : faCheck}
-                    onClick={avatarSubmit}
-                    className={`bg-white p-2 rounded-full h-3 w-3 text-black cursor-pointer ${isLoading && "animate-spin"}`}
-                  />
-                )}
               </div>
               <FormField
                 control={form.control}
