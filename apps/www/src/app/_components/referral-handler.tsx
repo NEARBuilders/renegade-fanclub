@@ -8,7 +8,7 @@ export function ReferralHandler() {
   const searchParams = useSearchParams();
   
   useEffect(() => {
-    const referralId = searchParams.get('referralId');
+    const referralId = searchParams.get('ref');
     if (referralId) {
       storeReferralId(referralId);
     }
