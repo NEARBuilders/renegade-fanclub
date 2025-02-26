@@ -1,4 +1,10 @@
 export default function Terms() {
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <div className="flex items-center justify-center p-6 text-white text-xs font-medium font-inter leading-relaxed md:text-sm">
       <div className="max-w-xl">
@@ -106,7 +112,7 @@ export default function Terms() {
           For any inquiries regarding the Giveaway, please contact [Customer
           Support Contact Information].
         </p>
-        <p className="mt-2">Last Updated: [Date]</p>
+        <p className="mt-2">Last Updated: {currentDate}</p>
       </div>
     </div>
   );
