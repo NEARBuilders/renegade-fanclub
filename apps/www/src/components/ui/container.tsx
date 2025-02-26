@@ -23,7 +23,7 @@ export const Container = ({
           "max-w-2xl": size === "sm",
           "max-w-none": size === "fluid",
         },
-        "space-y-4",
+        "space-y-4 overflow-y-auto scrollbar-custom",
         className,
       )}
     >
