@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import { BackgroundImageMain } from "@/components/background-g-image";
+import NextTopLoader from "nextjs-toploader";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -81,11 +82,12 @@ export default function RootLayout({
         </div>
         <div
           className={cn(
-            "min-h-[100dvh] px-2 w-screen overflow-x-hidden relative",
+            "min-h-[100dvh] px-2 w-screen overflow-hidden relative",
             "z-10",
           )}
         >
           <div className="h-full w-full">
+            <NextTopLoader color="#39FF14" showSpinner={false} />
             <Toaster />
             <QueryProvider>{children}</QueryProvider>
           </div>
