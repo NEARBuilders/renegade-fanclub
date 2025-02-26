@@ -9,7 +9,6 @@ import { QuestsList } from "./_components/quests-list";
 import { QuestSourceHandler } from "./_components/quest-source-handler";
 import { Metadata } from "next";
 import { Title } from "@/components/ui/title";
-import { getQuests } from "./data/mockdata";
 
 export const metadata: Metadata = {
   title: "Quests | RNG Fan Club",
