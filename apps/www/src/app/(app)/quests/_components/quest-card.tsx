@@ -9,12 +9,9 @@ import {
 } from "@/components/ui/card";
 import { completeQuest } from "@/lib/api/quests";
 import { QuestResponse } from "@renegade-fanclub/types";
+import { useCurrentUser } from "@/lib/hooks/use-current-user";
 import { faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons";
-import {
-  faTrophy,
-  faFootball,
-  faCopy,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrophy, faFootball, faCopy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useCallback, useState } from "react";
@@ -37,13 +34,14 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
     platform?: string;
     action?: string;
     intent_url?: string;
+    app_url?: string;
     game_id?: number;
     game_link?: string;
     game_type?: string;
     invite_link: string;
   };
 
-  const handleQuestComplete = useCallback(async () => {
+  const handleQuestComplete = useCallback(async (username?: string) => {
     try {
       // Optimistically update points
       const currentPoints =
@@ -54,7 +52,9 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
       );
 
       // Make API call
-      await completeQuest(quest.id, { verificationProof: {} });
+      await completeQuest(quest.id, { 
+        verificationProof: username ? { username } : {} 
+      });
 
       // Ensure data is refetched before showing toast
       await queryClient.invalidateQueries({ queryKey: ["quests"] });
@@ -96,23 +96,38 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
     }
   }, [quest.id, quest.pointsValue, onComplete, toast]);
 
-  const handleSocialFollow = useCallback(async () => {
+  const handleSocialAction = useCallback(async () => {
     // Open social link in new tab first to ensure it's directly tied to user interaction
     if (verificationData.intent_url) {
       window.open(verificationData.intent_url, "_blank");
     }
-    // Then complete the quest
-    await handleQuestComplete();
-  }, [handleQuestComplete, verificationData.intent_url]);
+    // Only complete the quest for social_follow type
+    if (quest.verificationType === "social_follow") {
+      await handleQuestComplete();
+    }
+  }, [handleQuestComplete, verificationData.intent_url, quest.verificationType]);
 
+
+  const { user } = useCurrentUser();
   const handleCopy = useCallback(async () => {
+    if (!user?.issuer) {
+      toast({
+        title: "Error",
+        description: "Could not generate invite link. Please try again.",
+      });
+      return;
+    }
+
+    const origin = "https://app.rngfanclub.com";
+    const inviteLink = `${origin}/?ref=${user.issuer}`;
+
     // Copy the invite link to the clipboard
-    await navigator.clipboard.writeText(verificationData.invite_link);
+    await navigator.clipboard.writeText(inviteLink);
     toast({
       title: "Success",
       description: "Link copied to clipboard!",
     });
-  }, [verificationData.invite_link]);
+  }, [user?.issuer, toast]);
 
   return (
     <>
@@ -143,7 +158,7 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
             {quest.verificationType === "social_follow" && (
               <button
                 name={quest.verificationType}
-                onClick={handleSocialFollow}
+                onClick={handleSocialAction}
                 disabled={isQuestCompleted}
                 className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
                   isQuestCompleted
@@ -169,8 +184,8 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
                   verificationData.action === "sign-up"
                     ? verificationData.platform === "sweatcoin"
                       ? () => setIsSweatcoinModalOpen(true)
-                      : handleSocialFollow
-                    : handleSocialFollow
+                      : handleSocialAction
+                    : handleSocialAction
                 }
                 disabled={isQuestCompleted}
                 className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
@@ -216,6 +231,22 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
                   </Link>
                 </Button>
               )}
+
+            {quest.verificationType === "social_post" && (
+              <button
+                name={quest.verificationType}
+                onClick={handleSocialAction}
+                disabled={isQuestCompleted}
+                className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
+                  isQuestCompleted
+                    ? "bg-gray-500 cursor-not-allowed"
+                    : "bg-white text-purple hover:bg-gray-200"
+                }`}
+              >
+                <FontAwesomeIcon icon={faXTwitter} />
+                <span>Post</span>
+              </button>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -224,7 +255,8 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
       <SweatcoinModal
         isOpen={isSweatcoinModalOpen}
         onClose={() => setIsSweatcoinModalOpen(false)}
-        onComplete={handleQuestComplete}
+        onComplete={(username) => handleQuestComplete(username)}
+        appUrl={verificationData.app_url || ""}
       />
     </>
   );
