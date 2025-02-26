@@ -15,5 +15,5 @@ export function clearReferralId(): void {
 }
 
 export function getReferralIdFromUrl(url: URL): string | null {
-  return url.searchParams.get('referralId');
+  return url.searchParams.get('ref');
 }

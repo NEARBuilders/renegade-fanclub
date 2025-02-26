@@ -17,7 +17,7 @@ export function QuestSourceHandler() {
       const processQuest = async () => {
         try {
           // TODO: Replace with actual quest ID and verification data
-          const result = await completeQuest(1, {
+          const result = await completeQuest(8, {
             verificationProof: {
               source,
               timestamp: new Date().toISOString()
