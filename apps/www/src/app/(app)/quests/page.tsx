@@ -8,7 +8,7 @@ import { getUserQuests } from "@/lib/api/quests";
 import { QuestsList } from "./_components/quests-list";
 import { Metadata } from "next";
 import { Title } from "@/components/ui/title";
-import { getQuests } from "./data/mockdata";
+import { listQuests } from "@/lib/api/quests";
 
 export const metadata: Metadata = {
   title: "Quests | RNG Fan Club",
@@ -36,11 +36,10 @@ export const metadata: Metadata = {
 };
 
 export default async function QuestsPage() {
-  // const apiQuests = await listQuests();
   const [profile, completedQuests, quests] = await Promise.all([
     getUserProfile(),
     getUserQuests(),
-    getQuests(),
+    listQuests(),
   ]);
 
   return (

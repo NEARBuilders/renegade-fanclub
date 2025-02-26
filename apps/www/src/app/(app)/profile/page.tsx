@@ -66,7 +66,7 @@ export default async function ProfilePage() {
           <CopyLink
             title="Refer a Friend"
             description="Earn more points"
-            link={"/invite?ref=" + profile.id}
+            link={"/?ref=" + profile.id}
           />
         </div>
       </Container>
