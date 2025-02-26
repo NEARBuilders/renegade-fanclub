@@ -45,7 +45,7 @@ VALUES
     '2024-02-01', '2024-02-28'),
   
   -- QR code quest
-  (1, 'Scan QR Code', 'Located on the corner of X and X', 500, 'scan_qrcode',
+  (1, 'Scan QR Code', 'Located on the billboard', 500, 'scan_qrcode',
     '{"action": "scan", "intent_url": "123456789"}',
     '2024-02-01', '2024-02-28'),
   

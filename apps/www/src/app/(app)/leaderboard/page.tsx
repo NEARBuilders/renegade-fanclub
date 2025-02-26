@@ -2,10 +2,10 @@ export const dynamic = "force-dynamic";
 
 import { Header } from "@/components/header";
 import { Container } from "@/components/ui/container";
+import { Title } from "@/components/ui/title";
+import { getUserProfile } from "@/lib/api";
 import { Metadata } from "next";
 import { Leaderboard } from "./_components/leaderboard";
-import { getUserProfile, getUserQuests } from "@/lib/api";
-import { Title } from "@/components/ui/title";
 
 export const metadata: Metadata = {
   title: "Leaderboard | RNG Fan Club",
@@ -33,15 +33,8 @@ export const metadata: Metadata = {
 };
 
 export default async function LeaderboardPage() {
-  const [profile, completedQuests] = await Promise.all([
-    getUserProfile(),
-    getUserQuests(),
-  ]);
+  const [profile] = await Promise.all([getUserProfile()]);
 
-  const totalPoints = completedQuests.reduce(
-    (sum, quest) => sum + quest.pointsEarned,
-    0,
-  );
   return (
     <>
       <Header profile={profile} />
