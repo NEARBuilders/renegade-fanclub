@@ -34,7 +34,7 @@ export function UserInfo({ initialEmail, onNext }: UserInfoProps) {
 
   const handleSubmit = async () => {
     if (isLoading || profileLoading) return;
-    
+
     const trimmedUsername = username.trim();
     const trimmedEmail = email.trim();
 
@@ -72,7 +72,8 @@ export function UserInfo({ initialEmail, onNext }: UserInfoProps) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Username can only contain letters, numbers, underscores, and hyphens",
+        description:
+          "Username can only contain letters, numbers, underscores, and hyphens",
       });
       return;
     }

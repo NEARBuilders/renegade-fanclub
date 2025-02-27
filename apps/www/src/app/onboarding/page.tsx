@@ -74,7 +74,7 @@ export default function OnboardingPage() {
                   const profileData: Record<string, unknown> = {
                     onboardingComplete: true,
                   };
-                  
+
                   // Only add phoneNumber if it exists
                   if (initialData?.phoneNumber) {
                     profileData.phoneNumber = initialData.phoneNumber;

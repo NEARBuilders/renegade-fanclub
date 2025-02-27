@@ -20,8 +20,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useOrigin } from "@/hooks/use-origin";
 import { useQueryClient } from "@tanstack/react-query";
 import { SweatcoinModal } from "@/components/modals/sweatcoin-modal";
+import { getUserProfile } from "@/lib/api";
 
 interface QuestCardProps {
   quest: QuestResponse;
@@ -118,26 +120,35 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
     quest.verificationType,
   ]);
 
-  const { user } = useCurrentUser();
+  // const { user } = useCurrentUser();
   const handleCopy = useCallback(async () => {
-    if (!user?.issuer) {
+    const [profile] = await Promise.all([getUserProfile()]);
+
+    if (!profile?.id) {
       toast({
         title: "Error",
         description: "Could not generate invite link. Please try again.",
       });
       return;
     }
-
     const origin = "https://app.rngfan.club";
-    const inviteLink = `${origin}/?ref=${user.issuer}`;
+    const inviteLink = `${origin}/?ref=${profile.id}`;
 
     // Copy the invite link to the clipboard
-    await navigator.clipboard.writeText(inviteLink);
-    toast({
-      title: "Success",
-      description: "Link copied to clipboard!",
-    });
-  }, [user?.issuer, toast]);
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      toast({
+        title: "Success",
+        description: "Link copied to clipboard!",
+      });
+    } catch (error) {
+      console.error("Failed to copy to clipboard:", error);
+      toast({
+        title: "Error",
+        description: "Failed to copy link. Please try again.",
+      });
+    }
+  }, [toast, origin]);
 
   return (
     <>
@@ -166,7 +177,7 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
           <div className="flex flex-col items-end justify-end">
             {/* Quest-specific actions */}
             {quest.verificationType === "social_follow" && (
-              <button
+              <Button
                 name={quest.verificationType}
                 onClick={handleSocialAction}
                 disabled={isQuestCompleted}
@@ -184,7 +195,7 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
                   }
                 />
                 <span>Follow</span>
-              </button>
+              </Button>
             )}
 
             {quest.verificationType === "signup_scan" && (
