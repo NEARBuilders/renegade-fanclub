@@ -2,7 +2,7 @@
 
 import ErrorBoundary from "@/components/error-boundary";
 
-export default function ShopError({
+export default function TermError({
   error,
   reset,
 }: {
@@ -10,6 +10,10 @@ export default function ShopError({
   reset: () => void;
 }) {
   return (
-    <ErrorBoundary error={error} reset={reset} title="Failed to load Shop" />
+    <ErrorBoundary
+      error={error}
+      reset={reset}
+      title="Failed to load Terms & Conditions"
+    />
   );
 }

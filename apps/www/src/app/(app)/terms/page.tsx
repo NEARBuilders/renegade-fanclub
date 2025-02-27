@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ShopPage() {
+export default async function TermPage() {
   const [profile] = await Promise.all([getUserProfile()]);
   return (
     <>
