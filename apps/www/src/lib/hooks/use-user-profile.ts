@@ -1,25 +1,18 @@
 "use client";
 
 import { getUserProfile } from "@/lib/api/user";
-import { getCurrentUserInfo } from "@/lib/auth";
 import { type ProfileResponse } from "@renegade-fanclub/types";
 import { useQuery } from "@tanstack/react-query";
+import { useCurrentUser } from "./use-current-user";
 
 export function useUserProfile(userId?: string) {
   if (!userId) {
-    const magicQuery = useQuery({
-      queryKey: ["magic-user"],
-      queryFn: getCurrentUserInfo,
-      staleTime: 1000 * 60 * 1, // Cache for 1 minutes
-    });
-
-    const magicUser = magicQuery.data;
+    const { user: magicUser, isLoading: isMagicLoading } = useCurrentUser();
 
     const profileQuery = useQuery<ProfileResponse>({
       queryKey: ["user-profile", magicUser?.issuer],
       queryFn: () => getUserProfile({ userId: magicUser?.issuer! }),
       enabled: !!magicUser?.issuer,
-      staleTime: 1000 * 60 * 1, // Cache for 1 minutes
     });
 
     const combinedData = magicUser && {
@@ -33,15 +26,14 @@ export function useUserProfile(userId?: string) {
 
     return {
       data: combinedData || null,
-      isLoading: magicQuery.isLoading || profileQuery.isLoading,
-      error: magicQuery.error || profileQuery.error,
+      isLoading: isMagicLoading || profileQuery.isLoading,
+      error: profileQuery.error,
     };
   } else {
     const profileQuery = useQuery<ProfileResponse>({
       queryKey: ["user-profile", userId],
       queryFn: () => getUserProfile({ userId: userId! }),
       enabled: !!userId,
-      staleTime: 1000 * 60 * 1, // Cache for 1 minutes
     });
 
     return {

@@ -1,25 +1,16 @@
 import { getCurrentUserInfo } from "@/lib/auth";
-import { useEffect, useState } from "react";
 import type { MagicUserMetadata } from "magic-sdk";
+import { useQuery } from "@tanstack/react-query";
 
 export function useCurrentUser() {
-  const [user, setUser] = useState<MagicUserMetadata | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const query = useQuery<MagicUserMetadata | null>({
+    queryKey: ["magic-user"],
+    queryFn: getCurrentUserInfo,
+  });
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userInfo = await getCurrentUserInfo();
-        setUser(userInfo);
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  return { user, isLoading };
+  return {
+    user: query.data,
+    isLoading: query.isLoading,
+    error: query.error
+  };
 }
