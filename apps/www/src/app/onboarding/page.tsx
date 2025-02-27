@@ -2,20 +2,18 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import { useToast } from "@/hooks/use-toast";
 import { createUserProfile } from "@/lib/api/user";
 import { getCurrentUserInfo } from "@/lib/auth";
-import { Sport } from "@renegade-fanclub/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UserInfo } from "./_components/user-info";
-import { useToast } from "@/hooks/use-toast";
 
 type OnboardingStep = "userInfo";
 
 export default function OnboardingPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState<OnboardingStep>("userInfo");
-  const [selectedSports, setSelectedSports] = useState<Sport[]>([]);
   const [initialData, setInitialData] = useState<{
     email?: string;
     phoneNumber?: string;
@@ -66,28 +64,27 @@ export default function OnboardingPage() {
             {currentStep === "userInfo" && (
               <UserInfo
                 initialEmail={initialData.email}
-                onNext={async (username, email) => {
-                  try {
-                    // Create profile with required fields
-                    await createUserProfile({
-                      username,
-                      email,
-                      profileData: {
-                        onboardingComplete: true,
-                        phoneNumber: initialData?.phoneNumber,
-                      },
+                onNext={(username, email) => {
+                  createUserProfile({
+                    username,
+                    email,
+                    profileData: {
+                      onboardingComplete: true,
+                      phoneNumber: initialData?.phoneNumber,
+                    },
+                  })
+                    .then(() => {
+                      router.push("/quests");
+                    })
+                    .catch((error) => {
+                      console.error("Failed to create profile:", error);
+                      toast({
+                        variant: "destructive",
+                        title: "Error",
+                        description:
+                          "Failed to create profile. Please try again.",
+                      });
                     });
-
-                    router.push("/quests");
-                  } catch (error) {
-                    console.error("Failed to create profile:", error);
-                    toast({
-                      variant: "destructive",
-                      title: "Error",
-                      description:
-                        "Failed to create profile. Please try again.",
-                    });
-                  }
                 }}
               />
             )}

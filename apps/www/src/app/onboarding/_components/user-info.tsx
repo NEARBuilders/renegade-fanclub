@@ -12,10 +12,13 @@ interface UserInfoProps {
 }
 
 export function UserInfo({ initialEmail, onNext }: UserInfoProps) {
-  const { data: profile, isLoading } = useUserProfile();
+  const { data: profile, isLoading: profileLoading } = useUserProfile();
   const [username, setUsername] = useState(profile?.username || "");
   const [email, setEmail] = useState(initialEmail || profile?.email || "");
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const isLoading = profileLoading || isSubmitting;
 
   // Update fields if profile or initialEmail loads after component mount
   useEffect(() => {
@@ -29,7 +32,9 @@ export function UserInfo({ initialEmail, onNext }: UserInfoProps) {
     }
   }, [profile, initialEmail, email, username]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (isLoading) return;
+    setIsSubmitting(true);
     if (!username.trim()) {
       toast({
         variant: "destructive",
@@ -48,7 +53,13 @@ export function UserInfo({ initialEmail, onNext }: UserInfoProps) {
       return;
     }
 
-    onNext(username.trim(), email.trim());
+    try {
+      onNext(username.trim(), email.trim());
+    } catch (error) {
+      console.error("Failed to submit:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -80,10 +91,10 @@ export function UserInfo({ initialEmail, onNext }: UserInfoProps) {
       <div>
         <Button
           onClick={handleSubmit}
-          disabled={!username.trim() || !email.trim()}
+          disabled={!username.trim() || !email.trim() || isLoading}
           className="w-full"
         >
-          Next
+          {isLoading ? "Loading..." : "Next"}
         </Button>
       </div>
     </div>
