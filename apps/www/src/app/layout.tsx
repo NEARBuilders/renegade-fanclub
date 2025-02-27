@@ -2,6 +2,7 @@ import { QueryProvider } from "@/components/query-provider";
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { BackgroundImageMain } from "@/components/background-g-image";
 import NextTopLoader from "nextjs-toploader";
@@ -92,8 +93,10 @@ export default function RootLayout({
             <NextTopLoader color="#39FF14" showSpinner={false} />
             <Toaster />
             <QueryProvider>
-              <ReferralHandler />
-              <QuestSourceHandler />
+              <Suspense>
+                <ReferralHandler />
+                <QuestSourceHandler />
+              </Suspense>
               {children}
             </QueryProvider>
           </div>
