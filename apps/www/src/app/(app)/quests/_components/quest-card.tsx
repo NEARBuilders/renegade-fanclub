@@ -128,7 +128,7 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
       return;
     }
 
-    const origin = "https://app.rngfanclub.com";
+    const origin = "https://app.rngfan.club";
     const inviteLink = `${origin}/?ref=${user.issuer}`;
 
     // Copy the invite link to the clipboard
