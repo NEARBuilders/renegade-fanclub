@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { useUserProfile } from "@/lib/hooks/use-user-profile";
 import { type PredictionResponse } from "@renegade-fanclub/types";
+import { formatPoints } from "@/lib/utils/format-points";
 
 function PredictionCard({ prediction }: { prediction: PredictionResponse }) {
   const { data: userProfile } = useUserProfile(prediction.userId);
@@ -29,7 +30,7 @@ function PredictionCard({ prediction }: { prediction: PredictionResponse }) {
         </div>
         {prediction.pointsEarned !== null && (
           <div className="text-sm font-medium">
-            Points: {prediction.pointsEarned}
+            Points: {formatPoints(prediction.pointsEarned)}
           </div>
         )}
       </div>

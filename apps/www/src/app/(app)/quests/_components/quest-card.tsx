@@ -22,6 +22,7 @@ import { useCallback, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { SweatcoinModal } from "@/components/modals/sweatcoin-modal";
+import { QuestCompletionState } from "@/components/quest-completion-state";
 
 interface QuestCardProps {
   quest: QuestResponse;
@@ -29,9 +30,8 @@ interface QuestCardProps {
   isCompleted?: boolean;
 }
 
-export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
+export function QuestCard({ quest, onComplete }: QuestCardProps) {
   const { toast } = useToast();
-  const [isQuestCompleted, setQuestCompleted] = useState(isCompleted);
   const [isSweatcoinModalOpen, setIsSweatcoinModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const verificationData = quest.verificationData as {
@@ -47,40 +47,82 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
 
   const handleQuestComplete = useCallback(
     async (username?: string) => {
+      // Store previous states
+      const previousPoints = queryClient.getQueryData(["user-points"]);
+      const previousLeaderboard = queryClient.getQueryData(["leaderboard"]);
+      const previousCompletedQuests = queryClient.getQueryData([
+        "quests",
+        "completed",
+      ]);
       try {
-        // Optimistically update points
-        const currentPoints =
-          queryClient.getQueryData<number>(["user-points"]) ?? 0;
-        queryClient.setQueryData(
-          ["user-points"],
-          currentPoints + quest.pointsValue,
-        );
+        // Update all queries atomically
+        queryClient.setQueriesData({
+          predicate: (query) => {
+            return (
+              query.queryKey[0] === "quests" ||
+              query.queryKey[0] === "user-points" ||
+              query.queryKey[0] === "leaderboard"
+            );
+          },
+        }, (old: any) => {
+          // Handle completed quests
+          if (Array.isArray(old)) {
+            return [
+              ...old,
+              {
+                questId: quest.id,
+                pointsEarned: quest.pointsValue,
+                completedAt: new Date().toISOString(),
+              },
+            ];
+          }
+          
+          // Handle points
+          if (typeof old === 'number') {
+            return old + quest.pointsValue;
+          }
+          
+          // Handle leaderboard
+          if (old?.rankings) {
+            return {
+              ...old,
+              rankings: old.rankings.map(
+                (ranking: { userId: string; totalPoints: number }) => {
+                  if (ranking.userId === user?.issuer) {
+                    return {
+                      ...ranking,
+                      totalPoints: ranking.totalPoints + quest.pointsValue,
+                    };
+                  }
+                  return ranking;
+                }
+              ),
+            };
+          }
+          
+          return old;
+        });
 
-        // Make API call
+        // Make API call after optimistic updates
         await completeQuest(quest.id, {
           verificationProof: username ? { username } : {},
         });
-
-        // Ensure data is refetched before showing toast
-        await queryClient.invalidateQueries({ queryKey: ["quests"] });
-        await queryClient.invalidateQueries({ queryKey: ["user-points"] });
 
         toast({
           title: "Quest Completed!",
           description: `You earned ${quest.pointsValue} points!`,
         });
 
-        setQuestCompleted(true);
-
         onComplete?.();
       } catch (error: any) {
-        // Revert optimistic update on error
-        const currentPoints =
-          queryClient.getQueryData<number>(["user-points"]) ?? 0;
+        // Revert all optimistic updates on error
+        queryClient.setQueryData(["user-points"], previousPoints);
+        queryClient.setQueryData(["leaderboard"], previousLeaderboard);
         queryClient.setQueryData(
-          ["user-points"],
-          currentPoints - quest.pointsValue,
+          ["quests", "completed"],
+          previousCompletedQuests,
         );
+
         const errorMessage = error?.message || "Unknown error";
         // If error includes specific messages, show appropriate message
         if (errorMessage.includes("already completed")) {
@@ -104,11 +146,11 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
   );
 
   const handleSocialAction = useCallback(async () => {
-    // Open social link in new tab first to ensure it's directly tied to user interaction
+    // Open social link in new tab
     if (verificationData.intent_url) {
       window.open(verificationData.intent_url, "_blank");
     }
-    // Only complete the quest for social_follow type
+    // Complete quest and run optimistic updates
     if (quest.verificationType === "social_follow") {
       await handleQuestComplete();
     }
@@ -166,96 +208,117 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
           <div className="flex flex-col items-end justify-end">
             {/* Quest-specific actions */}
             {quest.verificationType === "social_follow" && (
-              <button
-                name={quest.verificationType}
-                onClick={handleSocialAction}
-                disabled={isQuestCompleted}
-                className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
-                  isQuestCompleted
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-white text-purple hover:bg-gray-200"
-                }`}
-              >
-                <FontAwesomeIcon
-                  icon={
-                    verificationData.platform == "twitter"
-                      ? faXTwitter
-                      : faInstagram
-                  }
-                />
-                <span>Follow</span>
-              </button>
+              <QuestCompletionState questId={quest.id}>
+                {(isCompleted) => (
+                  <button
+                    name={quest.verificationType}
+                    onClick={handleSocialAction}
+                    disabled={isCompleted}
+                    className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
+                      isCompleted
+                        ? "bg-gray-500 cursor-not-allowed"
+                        : "bg-white text-purple hover:bg-gray-200"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={
+                        verificationData.platform == "twitter"
+                          ? faXTwitter
+                          : faInstagram
+                      }
+                    />
+                    <span>Follow</span>
+                  </button>
+                )}
+              </QuestCompletionState>
             )}
 
             {quest.verificationType === "signup_scan" && (
-              <button
-                name={quest.verificationType}
-                onClick={
-                  verificationData.action === "sign-up"
-                    ? verificationData.platform === "sweatcoin"
-                      ? () => setIsSweatcoinModalOpen(true)
-                      : handleSocialAction
-                    : handleSocialAction
-                }
-                disabled={isQuestCompleted}
-                className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
-                  isQuestCompleted
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-purple text-white hover:bg-purple/80"
-                }`}
-              >
-                {verificationData?.action
-                  ? verificationData.action.charAt(0).toUpperCase() +
-                    verificationData.action.slice(1)
-                  : "Sign-up"}
-              </button>
+              <QuestCompletionState questId={quest.id}>
+                {(isCompleted) => (
+                  <button
+                    name={quest.verificationType}
+                    onClick={
+                      verificationData.action === "sign-up"
+                        ? verificationData.platform === "sweatcoin"
+                          ? () => setIsSweatcoinModalOpen(true)
+                          : handleSocialAction
+                        : handleSocialAction
+                    }
+                    disabled={isCompleted}
+                    className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
+                      isCompleted
+                        ? "bg-gray-500 cursor-not-allowed"
+                        : "bg-purple text-white hover:bg-purple/80"
+                    }`}
+                  >
+                    {verificationData?.action
+                      ? verificationData.action.charAt(0).toUpperCase() +
+                        verificationData.action.slice(1)
+                      : "Sign-up"}
+                  </button>
+                )}
+              </QuestCompletionState>
             )}
 
             {quest.verificationType === "invite" && (
-              <button
-                name={quest.verificationType}
-                onClick={handleCopy}
-                className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
-                  isQuestCompleted
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-white text-black hover:bg-gray-200 "
-                }`}
-              >
-                <FontAwesomeIcon icon={faCopy} />
-                <span>Copy</span>
-              </button>
+              <QuestCompletionState questId={quest.id}>
+                {(isCompleted) => (
+                  <button
+                    name={quest.verificationType}
+                    onClick={handleCopy}
+                    disabled={isCompleted}
+                    className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
+                      isCompleted
+                        ? "bg-gray-500 cursor-not-allowed"
+                        : "bg-white text-black hover:bg-gray-200 "
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={faCopy} />
+                    <span>Copy</span>
+                  </button>
+                )}
+              </QuestCompletionState>
             )}
 
             {quest.verificationType === "prediction" &&
               verificationData.game_link && (
-                <Button
-                  asChild
-                  className={`flex items-center space-x-2 text-sm px-5 py-2 h-9 w-28 mt-auto ${
-                    isCompleted ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                  disabled={isCompleted}
-                >
-                  <Link href={verificationData.game_link}>
-                    <FontAwesomeIcon icon={faFootball} />
-                    <span>Predict</span>
-                  </Link>
-                </Button>
-              )}
+              <QuestCompletionState questId={quest.id}>
+                {(isCompleted) => (
+                  <Button
+                    asChild
+                    className={`flex items-center space-x-2 text-sm px-5 py-2 h-9 w-28 mt-auto ${
+                      isCompleted ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    disabled={isCompleted}
+                  >
+                    <Link href={verificationData.game_link || '#'}>
+                      <FontAwesomeIcon icon={faFootball} />
+                      <span>Predict</span>
+                    </Link>
+                  </Button>
+                )}
+              </QuestCompletionState>
+            )}
 
             {quest.verificationType === "social_post" && (
-              <button
-                name={quest.verificationType}
-                onClick={handleSocialAction}
-                disabled={isQuestCompleted}
-                className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
-                  isQuestCompleted
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-white text-purple hover:bg-gray-200"
-                }`}
-              >
-                <FontAwesomeIcon icon={faXTwitter} />
-                <span>Post</span>
-              </button>
+              <QuestCompletionState questId={quest.id}>
+                {(isCompleted) => (
+                  <button
+                    name={quest.verificationType}
+                    onClick={handleSocialAction}
+                    disabled={isCompleted}
+                    className={`flex items-center justify-center space-x-2 h-9 w-28 text-sm px-5 py-2 rounded-full mt-auto ${
+                      isCompleted
+                        ? "bg-gray-500 cursor-not-allowed"
+                        : "bg-white text-purple hover:bg-gray-200"
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={faXTwitter} />
+                    <span>Post</span>
+                  </button>
+                )}
+              </QuestCompletionState>
             )}
           </div>
         </CardContent>

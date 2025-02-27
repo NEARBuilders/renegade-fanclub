@@ -57,6 +57,17 @@ export interface CampaignResponse {
   createdAt: string;
 }
 
+export interface UserPointsResponse {
+  points: {
+    total: number;
+    predictions: number;
+    quests: number;
+    rank: number;
+    username: string;
+    avatar: string | null;
+  };
+}
+
 export interface LeaderboardEntryResponse {
   userId: string;
   username: string;

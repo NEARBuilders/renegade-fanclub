@@ -1,12 +1,12 @@
 "use client";
 
-import { faArrowLeft, faTrophy } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ProfileResponse } from "@renegade-fanclub/types";
-import { useUserPoints } from "@/lib/hooks/use-user-points";
+import { PointsDisplay } from "./points-display";
 
 interface HeaderProps {
   showtitle?: boolean;
@@ -21,7 +21,6 @@ export function Header({
   rightChildren,
   profile,
 }: HeaderProps) {
-  const { data: totalPoints } = useUserPoints();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -87,19 +86,8 @@ export function Header({
         <div className="flex items-center justify-center min-w-[64px]">
           {rightChildren ? (
             <div className="flex items-center space-x-2">{rightChildren}</div>
-          ) : totalPoints !== undefined ? (
-            <div className="flex items-center space-x-2 bg-white/10 px-5 py-1.5 rounded-full">
-              <FontAwesomeIcon icon={faTrophy} className="h-5 w-5 text-white" />
-              <span
-                className="text-white text-lg font-normal leading-relaxed font-jersey
-                overflow-hidden whitespace-nowrap text-ellipsis relative max-w-[100px] "
-                data-testid="user-points"
-              >
-                {totalPoints}
-              </span>
-            </div>
           ) : (
-            <div className="w-10" />
+            <PointsDisplay />
           )}
         </div>
       </div>

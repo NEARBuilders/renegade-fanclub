@@ -687,17 +687,31 @@ export async function handleGetUserPoints(
 
     const stmt = env.DB.prepare(
       `
-      SELECT SUM(quest_points) as total_quest_points
-      FROM user_points
+      SELECT 
+        total_points,
+        prediction_points,
+        quest_points,
+        rank,
+        username,
+        avatar,
+        last_updated
+      FROM user_points_summary
       WHERE user_id = ?
-      GROUP BY user_id
+      LIMIT 1
     `,
     ).bind(userId);
 
     const result = await stmt.first();
-    const totalPoints = result?.total_quest_points ?? 0;
+    const points = {
+      total: result?.total_points ?? 0,
+      predictions: result?.prediction_points ?? 0,
+      quests: result?.quest_points ?? 0,
+      rank: result?.rank ?? 0,
+      username: result?.username ?? "",
+      avatar: result?.avatar
+    };
 
-    return createSuccessResponse({ points: totalPoints }, corsHeaders);
+    return createSuccessResponse({ points }, corsHeaders);
   } catch (error) {
     console.error("[Get User Points Error]", error);
     return createErrorResponse(
