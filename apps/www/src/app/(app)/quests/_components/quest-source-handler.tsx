@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { completeQuest } from "@/lib/api/quests";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -14,6 +15,7 @@ import {
 export function QuestSourceHandler() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const source = searchParams.get("source");
@@ -40,6 +42,9 @@ export function QuestSourceHandler() {
             title: "Quest Completed!",
             description: `You earned ${result.pointsEarned} points!`,
           });
+
+          // Invalidate points query to trigger immediate update
+          queryClient.invalidateQueries({ queryKey: ["user-points"] });
 
           // Only clear storage and URL if completion was successful
           clearQuestSource();
