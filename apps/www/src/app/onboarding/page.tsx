@@ -64,27 +64,31 @@ export default function OnboardingPage() {
             {currentStep === "userInfo" && (
               <UserInfo
                 initialEmail={initialData.email}
-                onNext={(username, email) => {
-                  createUserProfile({
+                onNext={async (username, email) => {
+                  // Validate all required data
+                  if (!username || !email) {
+                    throw new Error("Username and email are required");
+                  }
+
+                  // Create profile data object
+                  const profileData: Record<string, unknown> = {
+                    onboardingComplete: true,
+                  };
+                  
+                  // Only add phoneNumber if it exists
+                  if (initialData?.phoneNumber) {
+                    profileData.phoneNumber = initialData.phoneNumber;
+                  }
+
+                  // Create user profile
+                  await createUserProfile({
                     username,
                     email,
-                    profileData: {
-                      onboardingComplete: true,
-                      phoneNumber: initialData?.phoneNumber,
-                    },
-                  })
-                    .then(() => {
-                      router.push("/quests");
-                    })
-                    .catch((error) => {
-                      console.error("Failed to create profile:", error);
-                      toast({
-                        variant: "destructive",
-                        title: "Error",
-                        description:
-                          "Failed to create profile. Please try again.",
-                      });
-                    });
+                    profileData,
+                  });
+
+                  // Navigate to quests page
+                  router.push("/quests");
                 }}
               />
             )}

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 interface UserInfoProps {
   initialEmail?: string;
-  onNext: (username: string, email: string) => void;
+  onNext: (username: string, email: string) => Promise<void>;
 }
 
 export function UserInfo({ initialEmail, onNext }: UserInfoProps) {
@@ -33,9 +33,13 @@ export function UserInfo({ initialEmail, onNext }: UserInfoProps) {
   }, [profile, initialEmail, email, username]);
 
   const handleSubmit = async () => {
-    if (isLoading) return;
-    setIsSubmitting(true);
-    if (!username.trim()) {
+    if (isLoading || profileLoading) return;
+    
+    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim();
+
+    // Validate username
+    if (!trimmedUsername) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -44,7 +48,36 @@ export function UserInfo({ initialEmail, onNext }: UserInfoProps) {
       return;
     }
 
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    // Username validation rules
+    if (trimmedUsername.length < 3) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Username must be at least 3 characters long",
+      });
+      return;
+    }
+
+    if (trimmedUsername.length > 30) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Username must be less than 30 characters",
+      });
+      return;
+    }
+
+    // Only allow letters, numbers, underscores, and hyphens
+    if (!/^[a-zA-Z0-9_-]+$/.test(trimmedUsername)) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Username can only contain letters, numbers, underscores, and hyphens",
+      });
+      return;
+    }
+
+    if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -53,10 +86,16 @@ export function UserInfo({ initialEmail, onNext }: UserInfoProps) {
       return;
     }
 
+    setIsSubmitting(true);
     try {
-      onNext(username.trim(), email.trim());
+      await onNext(trimmedUsername, trimmedEmail);
     } catch (error) {
       console.error("Failed to submit:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to save profile. Please try again.",
+      });
     } finally {
       setIsSubmitting(false);
     }
