@@ -146,8 +146,11 @@ export async function handleCompleteQuest(
     }
 
     // For QR code quests, verify the source matches
-    if (quest.verification_type === 'scan_qrcode' && 
-        (!verificationProof?.source || verificationProof.source !== 'eth-denver-avalanche-v-wild')) {
+    if (
+      quest.verification_type === "scan_qrcode" &&
+      (!verificationProof?.source ||
+        verificationProof.source !== "eth-denver-avalanche-v-wild")
+    ) {
       return createErrorResponse(
         "NOT_FOUND",
         "Quest not found",

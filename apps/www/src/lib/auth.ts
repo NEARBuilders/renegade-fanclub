@@ -12,10 +12,10 @@ const createMagic = (key: string) => {
   // We make sure that the window object is available
   if (typeof window !== "undefined") {
     const baseUrl = new URL(window.location.href);
-    const source = baseUrl.searchParams.get('source');
+    const source = baseUrl.searchParams.get("source");
     const questsUrl = new URL("/quests", baseUrl.origin);
     if (source) {
-      questsUrl.searchParams.set('source', source);
+      questsUrl.searchParams.set("source", source);
     }
     CALLBACK_URL = questsUrl.toString();
   }

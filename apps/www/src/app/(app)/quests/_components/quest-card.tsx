@@ -11,7 +11,11 @@ import { completeQuest } from "@/lib/api/quests";
 import { QuestResponse } from "@renegade-fanclub/types";
 import { useCurrentUser } from "@/lib/hooks/use-current-user";
 import { faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons";
-import { faTrophy, faFootball, faCopy } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrophy,
+  faFootball,
+  faCopy,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useCallback, useState } from "react";
@@ -41,60 +45,63 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
     invite_link: string;
   };
 
-  const handleQuestComplete = useCallback(async (username?: string) => {
-    try {
-      // Optimistically update points
-      const currentPoints =
-        queryClient.getQueryData<number>(["user-points"]) ?? 0;
-      queryClient.setQueryData(
-        ["user-points"],
-        currentPoints + quest.pointsValue,
-      );
+  const handleQuestComplete = useCallback(
+    async (username?: string) => {
+      try {
+        // Optimistically update points
+        const currentPoints =
+          queryClient.getQueryData<number>(["user-points"]) ?? 0;
+        queryClient.setQueryData(
+          ["user-points"],
+          currentPoints + quest.pointsValue,
+        );
 
-      // Make API call
-      await completeQuest(quest.id, { 
-        verificationProof: username ? { username } : {} 
-      });
-
-      // Ensure data is refetched before showing toast
-      await queryClient.invalidateQueries({ queryKey: ["quests"] });
-      await queryClient.invalidateQueries({ queryKey: ["user-points"] });
-
-      toast({
-        title: "Quest Completed!",
-        description: `You earned ${quest.pointsValue} points!`,
-      });
-
-      setQuestCompleted(true);
-
-      onComplete?.();
-    } catch (error: any) {
-      // Revert optimistic update on error
-      const currentPoints =
-        queryClient.getQueryData<number>(["user-points"]) ?? 0;
-      queryClient.setQueryData(
-        ["user-points"],
-        currentPoints - quest.pointsValue,
-      );
-      const errorMessage = error?.message || "Unknown error";
-      // If error includes specific messages, show appropriate message
-      if (errorMessage.includes("already completed")) {
-        toast({
-          title: "Already Completed",
-          description: "You've already completed this quest!",
+        // Make API call
+        await completeQuest(quest.id, {
+          verificationProof: username ? { username } : {},
         });
-      } else {
+
+        // Ensure data is refetched before showing toast
+        await queryClient.invalidateQueries({ queryKey: ["quests"] });
+        await queryClient.invalidateQueries({ queryKey: ["user-points"] });
+
         toast({
-          title: "Error",
-          description: errorMessage.includes("not active")
-            ? "This quest is not currently active"
-            : errorMessage.includes("Campaign is not active")
-              ? "This campaign is not currently active"
-              : "Failed to complete quest. Please try again.",
+          title: "Quest Completed!",
+          description: `You earned ${quest.pointsValue} points!`,
         });
+
+        setQuestCompleted(true);
+
+        onComplete?.();
+      } catch (error: any) {
+        // Revert optimistic update on error
+        const currentPoints =
+          queryClient.getQueryData<number>(["user-points"]) ?? 0;
+        queryClient.setQueryData(
+          ["user-points"],
+          currentPoints - quest.pointsValue,
+        );
+        const errorMessage = error?.message || "Unknown error";
+        // If error includes specific messages, show appropriate message
+        if (errorMessage.includes("already completed")) {
+          toast({
+            title: "Already Completed",
+            description: "You've already completed this quest!",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: errorMessage.includes("not active")
+              ? "This quest is not currently active"
+              : errorMessage.includes("Campaign is not active")
+                ? "This campaign is not currently active"
+                : "Failed to complete quest. Please try again.",
+          });
+        }
       }
-    }
-  }, [quest.id, quest.pointsValue, onComplete, toast]);
+    },
+    [quest.id, quest.pointsValue, onComplete, toast],
+  );
 
   const handleSocialAction = useCallback(async () => {
     // Open social link in new tab first to ensure it's directly tied to user interaction
@@ -105,8 +112,11 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
     if (quest.verificationType === "social_follow") {
       await handleQuestComplete();
     }
-  }, [handleQuestComplete, verificationData.intent_url, quest.verificationType]);
-
+  }, [
+    handleQuestComplete,
+    verificationData.intent_url,
+    quest.verificationType,
+  ]);
 
   const { user } = useCurrentUser();
   const handleCopy = useCallback(async () => {

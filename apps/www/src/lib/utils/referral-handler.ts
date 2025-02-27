@@ -1,4 +1,4 @@
-const REFERRAL_ID_KEY = 'referral_id';
+const REFERRAL_ID_KEY = "referral_id";
 
 export function storeReferralId(referralId: string): void {
   if (referralId) {
@@ -15,5 +15,5 @@ export function clearReferralId(): void {
 }
 
 export function getReferralIdFromUrl(url: URL): string | null {
-  return url.searchParams.get('ref');
+  return url.searchParams.get("ref");
 }

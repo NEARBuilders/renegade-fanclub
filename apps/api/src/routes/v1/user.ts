@@ -134,8 +134,8 @@ export async function handleCreateUserProfile(
                 quest.id,
                 quest.points_value,
                 JSON.stringify({
-                  type: 'referral',
-                  timestamp: new Date().toISOString()
+                  type: "referral",
+                  timestamp: new Date().toISOString(),
                 }),
               ),
               env.DB.prepare(
