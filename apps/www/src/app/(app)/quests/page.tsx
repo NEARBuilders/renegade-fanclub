@@ -4,11 +4,11 @@ export const revalidate = 0;
 import { Header } from "@/components/header";
 import { Container } from "@/components/ui/container";
 import { getUserProfile } from "@/lib/api";
-import { getUserQuests } from "@/lib/api/quests";
+import { getUserQuests, listQuests } from "@/lib/api/quests";
 import { QuestsList } from "./_components/quests-list";
+import { QuestSourceHandler } from "./_components/quest-source-handler";
 import { Metadata } from "next";
 import { Title } from "@/components/ui/title";
-import { listQuests } from "@/lib/api/quests";
 
 export const metadata: Metadata = {
   title: "Quests | RNG Fan Club",
@@ -44,6 +44,7 @@ export default async function QuestsPage() {
 
   return (
     <>
+      <QuestSourceHandler />
       <Header profile={profile} />
       <Container>
         <Title

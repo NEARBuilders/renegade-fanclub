@@ -112,19 +112,45 @@ export async function handleCompleteQuest(
       );
     }
 
-    // Verify quest exists and is active
+    // Verify quest exists, is active, and hasn't been completed by this user
     const questStmt = env.DB.prepare(
       `
-      SELECT q.*, c.status as campaign_status
+      SELECT q.*, c.status as campaign_status,
+        (SELECT COUNT(*) FROM user_quest_completions uqc 
+         WHERE uqc.quest_id = q.id AND uqc.user_id = ?) as completion_count
       FROM quests q
       JOIN campaigns c ON q.campaign_id = c.id
       WHERE q.id = ?
     `,
-    ).bind(questId);
+    ).bind(userId, questId);
 
     const quest = await questStmt.first();
 
     if (!quest) {
+      return createErrorResponse(
+        "NOT_FOUND",
+        "Quest not found",
+        404,
+        corsHeaders,
+      );
+    }
+
+    // Check if user has already completed this quest
+    if ((quest.completion_count as number) > 0) {
+      return createErrorResponse(
+        "INVALID_REQUEST",
+        "Quest already completed",
+        400,
+        corsHeaders,
+      );
+    }
+
+    // For QR code quests, verify the source matches
+    if (
+      quest.verification_type === "scan_qrcode" &&
+      (!verificationProof?.source ||
+        verificationProof.source !== "eth-denver-avalanche-v-wild")
+    ) {
       return createErrorResponse(
         "NOT_FOUND",
         "Quest not found",
@@ -143,17 +169,17 @@ export async function handleCompleteQuest(
     }
 
     const now = new Date();
-    const startDate = new Date(quest.start_date as string);
-    const endDate = new Date(quest.end_date as string);
+    // const startDate = new Date(quest.start_date as string);
+    // const endDate = new Date(quest.end_date as string);
 
-    if (now < startDate || now > endDate) {
-      return createErrorResponse(
-        "INVALID_REQUEST",
-        "Quest is not active",
-        400,
-        corsHeaders,
-      );
-    }
+    // if (now < startDate || now > endDate) {
+    //   return createErrorResponse(
+    //     "INVALID_REQUEST",
+    //     "Quest is not active",
+    //     400,
+    //     corsHeaders,
+    //   );
+    // }
 
     // Use D1 batch for atomic operations
     await env.DB.batch([

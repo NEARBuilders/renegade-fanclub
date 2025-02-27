@@ -32,13 +32,13 @@ export const SweatcoinModal = ({
   const handleComplete = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) return; // Prevent empty submissions
-    
+
     setIsSubmitting(true);
     try {
       await onComplete(username);
       onClose();
     } catch (error) {
-      console.error('Failed to complete signup:', error);
+      console.error("Failed to complete signup:", error);
       toast({
         title: "Error",
         description: "Failed to complete signup. Please try again.",
@@ -65,7 +65,7 @@ export const SweatcoinModal = ({
           <h3 className="font-bold mb-2">How to win points:</h3>
           <ul className="list-disc pl-5 space-y-2 text-gray-200">
             <li>
-              <a 
+              <a
                 href={appUrl}
                 target="_blank"
                 rel="noopener noreferrer"

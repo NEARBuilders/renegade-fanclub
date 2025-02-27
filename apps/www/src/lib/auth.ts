@@ -1,6 +1,7 @@
 import { OAuthExtension } from "@magic-ext/oauth2";
 import { Magic, RPCError, RPCErrorCode } from "magic-sdk";
 import { toast } from "@/hooks/use-toast";
+import { getStoredReferralId } from "./utils/referral-handler";
 
 // Build the key into the client
 const MAGIC_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MAGIC_API_KEY!;
@@ -11,7 +12,12 @@ const createMagic = (key: string) => {
   // We make sure that the window object is available
   if (typeof window !== "undefined") {
     const baseUrl = new URL(window.location.href);
-    CALLBACK_URL = new URL("/quests", baseUrl.origin).toString();
+    const source = baseUrl.searchParams.get("source");
+    const questsUrl = new URL("/quests", baseUrl.origin);
+    if (source) {
+      questsUrl.searchParams.set("source", source);
+    }
+    CALLBACK_URL = questsUrl.toString();
   }
 
   // Then we create a new instance of Magic using a publishable key
@@ -67,6 +73,7 @@ export async function loginWithEmail(email: string) {
   if (magic) {
     // Log in using our email with Magic and store the returned DID token in a variable
     const didToken = await magic.auth.loginWithMagicLink({ email });
+    const referralId = getStoredReferralId();
 
     const res = await fetch("/api/auth/login", {
       method: "POST",
@@ -74,6 +81,9 @@ export async function loginWithEmail(email: string) {
         "Content-type": "application/json",
         Authorization: `Bearer ${didToken}`,
       },
+      body: JSON.stringify({
+        referralId,
+      }),
     });
 
     if (!res.ok) {
@@ -91,6 +101,7 @@ export async function loginWithPhoneNumber(phoneNumber: string) {
   if (magic) {
     // Log in using phone number with Magic and store the returned DID token
     const didToken = await magic.auth.loginWithSMS({ phoneNumber });
+    const referralId = getStoredReferralId();
 
     const res = await fetch("/api/auth/login", {
       method: "POST",
@@ -98,6 +109,9 @@ export async function loginWithPhoneNumber(phoneNumber: string) {
         "Content-type": "application/json",
         Authorization: `Bearer ${didToken}`,
       },
+      body: JSON.stringify({
+        referralId,
+      }),
     });
 
     if (!res.ok) {

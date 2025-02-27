@@ -8,7 +8,10 @@ const magic = new Magic(process.env.MAGIC_SECRET_KEY!);
 
 export async function POST(request: Request) {
   try {
-    // Get the DID token from the Authorization header
+    // Get the request body and DID token
+    const body = await request.json();
+    const { referralId } = body;
+
     const authHeader = request.headers.get("Authorization");
     const didToken = authHeader?.split("Bearer ")[1];
 
@@ -28,6 +31,7 @@ export async function POST(request: Request) {
       email: userMetadata.email || undefined,
       publicAddress: userMetadata.publicAddress || undefined,
       isAdmin: false, // Will be checked against env whitelist in worker
+      referredBy: referralId, // Include referral info in the JWT
     })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()

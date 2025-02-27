@@ -2,9 +2,12 @@ import { QueryProvider } from "@/components/query-provider";
 import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { BackgroundImageMain } from "@/components/background-g-image";
 import NextTopLoader from "nextjs-toploader";
+import { ReferralHandler } from "./_components/referral-handler";
+import { QuestSourceHandler } from "./_components/quest-source-handler";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -89,7 +92,13 @@ export default function RootLayout({
           <div className="h-full w-full">
             <NextTopLoader color="#39FF14" showSpinner={false} />
             <Toaster />
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <Suspense>
+                <ReferralHandler />
+                <QuestSourceHandler />
+              </Suspense>
+              {children}
+            </QueryProvider>
           </div>
         </div>
       </body>

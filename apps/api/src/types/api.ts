@@ -25,6 +25,7 @@ export interface AuthenticatedRequest extends Request {
     isAdmin: boolean;
     email?: string;
     publicAddress?: string;
+    referredBy?: string;
   };
 }
 
