@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { BackgroundImageMain } from "@/components/background-g-image";
 import NextTopLoader from "nextjs-toploader";
 import { ReferralHandler } from "./_components/referral-handler";
+import { QuestSourceHandler } from "./_components/quest-source-handler";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -92,6 +93,7 @@ export default function RootLayout({
             <Toaster />
             <QueryProvider>
               <ReferralHandler />
+              <QuestSourceHandler />
               {children}
             </QueryProvider>
           </div>

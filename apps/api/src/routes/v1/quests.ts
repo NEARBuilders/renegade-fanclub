@@ -103,20 +103,6 @@ export async function handleCompleteQuest(
     const { verificationProof } =
       (await request.json()) as CompleteQuestRequest;
 
-    // Validate source for QR code quests
-    if (verificationProof?.source === 'eth-denver-avalanche-v-wild') {
-      // For QR code quests, we'll use a specific quest ID
-      // This ensures only the correct quest can be completed with this source
-      if (questId !== '1') { // TODO: Replace with actual QR code quest ID
-        return createErrorResponse(
-          "INVALID_REQUEST",
-          "Invalid quest for this QR code",
-          400,
-          corsHeaders,
-        );
-      }
-    }
-
     if (!questId) {
       return createErrorResponse(
         "INVALID_PARAMS",
@@ -160,7 +146,7 @@ export async function handleCompleteQuest(
     }
 
     // For QR code quests, verify the source matches
-    if (quest.verification_type === 'qr_code' && 
+    if (quest.verification_type === 'scan_qrcode' && 
         (!verificationProof?.source || verificationProof.source !== 'eth-denver-avalanche-v-wild')) {
       return createErrorResponse(
         "NOT_FOUND",
@@ -180,17 +166,17 @@ export async function handleCompleteQuest(
     }
 
     const now = new Date();
-    const startDate = new Date(quest.start_date as string);
-    const endDate = new Date(quest.end_date as string);
+    // const startDate = new Date(quest.start_date as string);
+    // const endDate = new Date(quest.end_date as string);
 
-    if (now < startDate || now > endDate) {
-      return createErrorResponse(
-        "INVALID_REQUEST",
-        "Quest is not active",
-        400,
-        corsHeaders,
-      );
-    }
+    // if (now < startDate || now > endDate) {
+    //   return createErrorResponse(
+    //     "INVALID_REQUEST",
+    //     "Quest is not active",
+    //     400,
+    //     corsHeaders,
+    //   );
+    // }
 
     // Use D1 batch for atomic operations
     await env.DB.batch([
