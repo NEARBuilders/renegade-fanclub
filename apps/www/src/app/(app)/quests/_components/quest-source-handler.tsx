@@ -4,7 +4,12 @@ import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { completeQuest } from "@/lib/api/quests";
 import { useToast } from "@/hooks/use-toast";
-import { isValidQuestSource, clearQuestSource, getStoredQuestSource, storeQuestSource } from "@/lib/utils/quest-source";
+import {
+  isValidQuestSource,
+  clearQuestSource,
+  getStoredQuestSource,
+  storeQuestSource,
+} from "@/lib/utils/quest-source";
 
 export function QuestSourceHandler() {
   const searchParams = useSearchParams();
@@ -38,7 +43,7 @@ export function QuestSourceHandler() {
 
           // Only clear storage and URL if completion was successful
           clearQuestSource();
-          
+
           if (source) {
             // Remove the source from URL without navigation
             const url = new URL(window.location.href);
