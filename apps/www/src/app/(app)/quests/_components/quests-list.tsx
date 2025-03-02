@@ -4,15 +4,21 @@ import { QuestCard } from "./quest-card";
 import {
   QuestResponse,
   QuestCompletionResponse,
+  ProfileResponse,
 } from "@renegade-fanclub/types";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface QuestsListProps {
   quests: QuestResponse[];
   completedQuests: QuestCompletionResponse[];
+  profile?: ProfileResponse;
 }
 
-export function QuestsList({ quests, completedQuests }: QuestsListProps) {
+export function QuestsList({
+  quests,
+  completedQuests,
+  profile,
+}: QuestsListProps) {
   const queryClient = useQueryClient();
 
   return (
@@ -25,6 +31,7 @@ export function QuestsList({ quests, completedQuests }: QuestsListProps) {
           <QuestCard
             key={quest.id}
             quest={quest}
+            profile={profile}
             isCompleted={isCompleted}
             onComplete={() => {
               // Invalidate quests and user points data

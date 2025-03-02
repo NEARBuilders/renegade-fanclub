@@ -52,7 +52,11 @@ export default async function QuestsPage() {
           description="Earn points for each quest - be quick!"
         />
         {/* Quests List */}
-        <QuestsList quests={quests} completedQuests={completedQuests} />
+        <QuestsList
+          quests={quests}
+          completedQuests={completedQuests}
+          profile={profile}
+        />
       </Container>
     </>
   );

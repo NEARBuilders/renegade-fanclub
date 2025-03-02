@@ -8,8 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { completeQuest } from "@/lib/api/quests";
-import { QuestResponse } from "@renegade-fanclub/types";
-import { useCurrentUser } from "@/lib/hooks/use-current-user";
+import { ProfileResponse, QuestResponse } from "@renegade-fanclub/types";
 import { faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons";
 import {
   faTrophy,
@@ -27,9 +26,15 @@ interface QuestCardProps {
   quest: QuestResponse;
   onComplete?: () => void;
   isCompleted?: boolean;
+  profile?: ProfileResponse;
 }
 
-export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
+export function QuestCard({
+  quest,
+  onComplete,
+  isCompleted,
+  profile,
+}: QuestCardProps) {
   const { toast } = useToast();
   const [isQuestCompleted, setQuestCompleted] = useState(isCompleted);
   const [isSweatcoinModalOpen, setIsSweatcoinModalOpen] = useState(false);
@@ -118,26 +123,33 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
     quest.verificationType,
   ]);
 
-  const { user } = useCurrentUser();
+  // const { user } = useCurrentUser();
   const handleCopy = useCallback(async () => {
-    if (!user?.issuer) {
+    if (!profile?.id) {
       toast({
         title: "Error",
         description: "Could not generate invite link. Please try again.",
       });
       return;
     }
-
     const origin = "https://app.rngfan.club";
-    const inviteLink = `${origin}/?ref=${user.issuer}`;
+    const inviteLink = `${origin}/?ref=${profile.id}`;
 
     // Copy the invite link to the clipboard
-    await navigator.clipboard.writeText(inviteLink);
-    toast({
-      title: "Success",
-      description: "Link copied to clipboard!",
-    });
-  }, [user?.issuer, toast]);
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      toast({
+        title: "Success",
+        description: "Link copied to clipboard!",
+      });
+    } catch (error) {
+      console.error("Failed to copy to clipboard:", error);
+      toast({
+        title: "Error",
+        description: "Failed to copy link. Please try again.",
+      });
+    }
+  }, [toast, origin]);
 
   return (
     <>
@@ -166,7 +178,7 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
           <div className="flex flex-col items-end justify-end">
             {/* Quest-specific actions */}
             {quest.verificationType === "social_follow" && (
-              <button
+              <Button
                 name={quest.verificationType}
                 onClick={handleSocialAction}
                 disabled={isQuestCompleted}
@@ -184,7 +196,7 @@ export function QuestCard({ quest, onComplete, isCompleted }: QuestCardProps) {
                   }
                 />
                 <span>Follow</span>
-              </button>
+              </Button>
             )}
 
             {quest.verificationType === "signup_scan" && (
